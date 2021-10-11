@@ -1,31 +1,55 @@
 import React, { useState } from "react";
-const URL = 'http://127.0.0.1:8000/api/'
+import DataPreparation from "./steps/DataPreparation";
 import GatheringData from "./steps/GatheringData";
 
-function SelectedProject({ selectedFlow }) {
-    if (selectedFlow == -1) {
+
+function SelectedProject({ selectedFlow, setSelectedFlow }) {
+
+
+    if (!selectedFlow) {
         return <p className='col-10'>
             پروژه ای انتخاب نشده است
         </p>
     }
-    const [project, setProject] = React.useState(null);
-    const getFlow = URL + `flows/${selectedFlow}/`
-    React.useEffect(() => {
-        fetch(getFlow)
-            .then(results => results.json())
-            .then(data => {
-                setProject(data);
-            });
-    }, []);
 
     // https://www.javatpoint.com/machine-learning-life-cycle
 
     return (
-        !project ? <p>loading...</p>
-            :
-            <div className='col-10'>
-                <GatheringData project={project} />
-            </div >
+        <div className='col-10 mt-3'>
+            <div id="accordion">
+                <div className="card">
+                    <div className="card-header" id="headingOne">
+                        <h1 className="mb-0 text-right">
+                            <button className="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                ۱.جمع آوری داده ها
+                            </button>
+                        </h1>
+                    </div>
+
+                    <div id="collapseOne" className="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                        <GatheringData selectedFlow={selectedFlow} setSelectedFlow={setSelectedFlow}/>
+                    </div>
+                </div>
+
+
+                <div className="card">
+                    <div className="card-header" id="headingTwo">
+                        <h1 className="mb-0 text-right">
+                            <button className="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                ۲.آماده سازی داده ها
+                            </button>
+                        </h1>
+                    </div>
+
+                    <div id="collapseTwo" className="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                        <DataPreparation selectedFlow={selectedFlow} setSelectedFlow={setSelectedFlow}/>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div >
     )
 }
 

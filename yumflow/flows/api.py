@@ -62,6 +62,15 @@ class FlowViewSet(viewsets.ModelViewSet):
         }
         return Response(datas)
 
+    
+    @action(detail=True, methods=['post'])
+    def set_data_by_instagram_account(self, request, pk=None):
+        flow = self.get_object()
+        a = request.data["data"]
+        # todo
+        return Response({"error":"asdad"})
+    
+
 
 class DataFrameViewSet(viewsets.ModelViewSet):
     queryset = DataFrame.objects.all()
