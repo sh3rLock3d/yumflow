@@ -6,16 +6,20 @@ import requests
 
 
 def read_CSV_data(csv_byte, labels):
-    labels = ''.join(labels.split()).split(',')
     df = pd.read_csv(BytesIO(csv_byte))
-    y = df[labels]
-    x = df.loc[:, ~df.columns.isin(labels)]
-    return x, y
+    if (labels):
+        now = pd.to_datetime("now")
+        df['Time'] = [now for _ in range(len(df))]
+    return df
 
 
 def data_split(x, y, test_size):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test_size)
     return x_train, x_test, y_train, y_test
+
+
+def append_data(df1, df2):
+    return df1.append(df2, ignore_index=True)
 
 
 def show_digest_of_data(x):
