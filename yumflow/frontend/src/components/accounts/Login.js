@@ -22,7 +22,7 @@ function Login() {
 
         login(username, password)
             .then(data => {
-                console.log(data)
+                console.log("success"+data)
                 dispatch({type: LOGIN_SUCCESS, payload: data});
             })
             .catch((error) => {

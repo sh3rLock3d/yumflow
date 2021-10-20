@@ -53,7 +53,7 @@ const Flow = () => {
                         </h1>
                     </div>
 
-                    <div id="collapseTwo" className="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div id="collapseTwo" className="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
                         <DataPreparation />
                     </div>
                 </div>

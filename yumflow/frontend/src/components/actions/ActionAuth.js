@@ -15,7 +15,6 @@ export const login = (username, password) => {
         },
         body: JSON.stringify(data),
     }).then(response => {
-        
         if (response.status != 200) {
             throw new Error(response.json())
         }
