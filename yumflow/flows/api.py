@@ -65,6 +65,21 @@ class FlowViewSet(viewsets.ModelViewSet):
 
     
     @action(detail=True, methods=['post'])
+    def prepare_data(self, request, pk=None):
+        flow = self.get_object()
+        #print('start')
+        #print(type(request.body))
+        
+        #print('end')
+        #data = flow.data
+        
+        #df = filter_data(request.data['cols'], request.data['colFilter'], request.data['constraints'])
+        return Response({'status': 'password set'})
+
+    
+
+    
+    @action(detail=True, methods=['post'])
     def set_data_by_instagram_account(self, request, pk=None):
         flow = self.get_object()
         a = request.data["data"]

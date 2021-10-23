@@ -57,4 +57,16 @@ function ActionGetGatheringDataInfo(id){
     return res
 }
 
-export {ActionGetAllFlows, ActionCreateFlow, ActionSetData, ActionGetGatheringDataInfo, ActionGetFlow, ActionAppendData}
+function ActionPrepareData(id, data){
+    const link = `${URL}flows/${id}/prepare_data/`
+    let res = fetch(link, {
+        method: 'POST',
+        headers: tokenConfig().headers,
+        body: data,
+    })
+        .then(response => response.json())
+    
+    return res
+}
+
+export {ActionGetAllFlows, ActionCreateFlow, ActionSetData, ActionGetGatheringDataInfo, ActionGetFlow, ActionAppendData, ActionPrepareData}

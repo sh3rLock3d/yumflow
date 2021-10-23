@@ -25,6 +25,12 @@ def append_data(df1, df2):
 def show_digest_of_data(x):
     return x.head(5)
 
+def filter_data(cols, colFilter, constraints):
+    print(cols)
+    print(colFilter)
+    print(constraints)
+    return 1
+
 
 def instagram_accounts_exists(accounts):
     import requests

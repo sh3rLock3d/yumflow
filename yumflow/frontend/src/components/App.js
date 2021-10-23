@@ -10,6 +10,7 @@ import Flow from './flow/Flow'
 import Store from '../Store';
 import Login from './accounts/Login';
 import SelectProject from './selectProject/SelectProject';
+import WebExtraction from './webExtraction/WebExtraction';
 
 class App extends Component {
     render() {
@@ -24,6 +25,7 @@ class App extends Component {
                         <Route exact path="/login" component={Login} />
                         <Route exact path="/selectProject" component={SelectProject} />
                         <Route exact path="/flow/:id" component={Flow} />
+                        <Route exact path="/webExtraction" component={WebExtraction} />
                     </Switch>
                 </Router>
             </Store>

@@ -2,7 +2,6 @@ import React, { useEffect, useContext } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { Context } from '../../Store'
 import { login } from '../actions/ActionAuth'
-
 import {LOGIN_SUCCESS} from '../actions/types'
 
 function Login() {

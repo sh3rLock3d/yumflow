@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from '../../../Store'
+import { ActionPrepareData } from "../../actions/Action";
 
 
-const ChooseRows = ({Pconstraints}) => {
+const ChooseRows = ({ Pconstraints }) => {
     const [state, dispatch] = useContext(Context);
     const flow = state["auth"]["flow"]
 
@@ -15,7 +16,7 @@ const ChooseRows = ({Pconstraints}) => {
         let c = constraints['or']
         document.getElementById('ChooseRowsLogicCondition').value = '=='
         document.getElementById('ChooseRowsvalueCondition').value = ""
-        
+
         setConstraints({
             'and': [...constraints['and'], [cname, b, c]],
             'or': []
@@ -136,14 +137,14 @@ const ChooseRows = ({Pconstraints}) => {
     )
 }
 
-
-
-function DataPreparation() {
+const ChooseCols = ({ Pcols }) => {
     const [state, dispatch] = useContext(Context);
     const flow = state["auth"]["flow"]
-
     // cols
     const [inputCols, setInputCols] = useState({});
+
+    Pcols.length = 0
+    Pcols.push(inputCols)
 
     const inputColDiv = Object.keys(inputCols).map((name) =>
         <div className="row justify-center" key={name}>
@@ -182,50 +183,79 @@ function DataPreparation() {
         setStatCols(a)
     }
 
+
+    return (
+        <div className="container p-2 shadow-sm text-right">
+            <h5>
+                آماده سازی ستون ها
+            </h5>
+
+            <div className="form-check" dir="ltr">
+                <input className="form-check-input" type="radio" name="radioChooseCol" id="radioChooseCol1" value="option1" onChange={oncheckColChanged} defaultChecked={statCols == 1} />
+                <label className="form-check-label" htmlFor="radioChooseCol1">
+                    انتخاب تمام ستون ها
+                </label>
+            </div>
+            <div className="form-check" dir="ltr">
+                <input className="form-check-input" type="radio" name="radioChooseCol" id="radioChooseCol2" value="option2" onChange={oncheckColChanged} />
+                <label className="form-check-label" htmlFor="radioChooseCol2">
+                    حذف تمامی ستون ها به جز ستون های انتخابی
+                </label>
+            </div>
+            <div className="form-check disabled" dir="ltr">
+                <input className="form-check-input" type="radio" name="radioChooseCol" id="radioChooseCol3" value="option3" onChange={oncheckColChanged} />
+                <label className="form-check-label" htmlFor="radioChooseCol3">
+                    انتخاب ستون های انتخابی
+                </label>
+            </div>
+            <div style={{ display: statCols == 1 ? 'none' : 'block' }}>
+                <div className="row justify-center">
+                    <div className="col-3" id="column_inputs">
+                        <input className="form-control" id="columninput0" name="columninput0" type="text" placeholder="نام ستون" onKeyUp={onkeyupCol} />
+                    </div>
+                </div>
+                {inputColDiv}
+
+            </div>
+        </div>
+    )
+
+
+}
+
+function DataPreparation() {
+    const [state, dispatch] = useContext(Context);
+    const flow = state["auth"]["flow"]
+
     // rows
 
-    const inputRowDiv = <p>hello</p>
+
     const Pconstraints = []
-    const sendInfo = ()=>{
-        console.log(Pconstraints);
+    const Pcols = []
+    const sendInfo = () => {
+        let constraints = 0//Pconstraints
+        let cols = 0//Pcols[0]
+        let colFilter = 0
+        if (document.getElementById('radioChooseCol2').checked) {
+            colFilter = 1
+        } else if (document.getElementById('radioChooseCol3').checked) {
+            colFilter = 2
+        }
+        let data = { "constraints":constraints, "cols":cols, "colFilter":colFilter }
+        console.log(data);
+        ActionPrepareData(flow.id, data)
+            .then(data => {
+                console.log(data)
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
     }
 
     return (
         <>
-            <div className="container p-2 shadow-sm text-right">
-                <h5>
-                    آماده سازی ستون ها
-                </h5>
-
-                <div className="form-check" dir="ltr">
-                    <input className="form-check-input" type="radio" name="radioChooseCol" id="radioChooseCol1" value="option1" onChange={oncheckColChanged} defaultChecked={statCols == 1} />
-                    <label className="form-check-label" htmlFor="radioChooseCol1">
-                        انتخاب تمام ستون ها
-                    </label>
-                </div>
-                <div className="form-check" dir="ltr">
-                    <input className="form-check-input" type="radio" name="radioChooseCol" id="radioChooseCol2" value="option2" onChange={oncheckColChanged} />
-                    <label className="form-check-label" htmlFor="radioChooseCol2">
-                        حذف تمامی ستون ها به جز ستون های انتخابی
-                    </label>
-                </div>
-                <div className="form-check disabled" dir="ltr">
-                    <input className="form-check-input" type="radio" name="radioChooseCol" id="radioChooseCol3" value="option3" onChange={oncheckColChanged} />
-                    <label className="form-check-label" htmlFor="radioChooseCol3">
-                        انتخاب ستون های انتخابی
-                    </label>
-                </div>
-                <div style={{ display: statCols == 1 ? 'none' : 'block' }}>
-                    <div className="row justify-center">
-                        <div className="col-3" id="column_inputs">
-                            <input className="form-control" id="columninput0" name="columninput0" type="text" placeholder="نام ستون" onKeyUp={onkeyupCol} />
-                        </div>
-                    </div>
-                    {inputColDiv }
-
-                </div>
-            </div>
-            <ChooseRows Pconstraints={Pconstraints}/>
+            <ChooseCols Pcols={Pcols} />
+            <ChooseRows Pconstraints={Pconstraints} />
             <div className="container p-2 shadow-sm text-right">
                 <div className="row" dir="ltr">
                     <button type="button" className="btn btn-primary" onClick={sendInfo}>
