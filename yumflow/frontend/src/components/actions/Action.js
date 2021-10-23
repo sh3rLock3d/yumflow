@@ -59,10 +59,11 @@ function ActionGetGatheringDataInfo(id){
 
 function ActionPrepareData(id, data){
     const link = `${URL}flows/${id}/prepare_data/`
+    
     let res = fetch(link, {
         method: 'POST',
         headers: tokenConfig().headers,
-        body: data,
+        body: JSON.stringify(data),
     })
         .then(response => response.json())
     

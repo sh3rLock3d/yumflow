@@ -4,6 +4,8 @@ from .serializers import DataFrameSerializers, FlowSerializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .MLTools.main import *
+from rest_framework.decorators import parser_classes
+from rest_framework.parsers import JSONParser
 
 class FlowViewSet(viewsets.ModelViewSet):
     permission_classes = [
@@ -65,15 +67,15 @@ class FlowViewSet(viewsets.ModelViewSet):
 
     
     @action(detail=True, methods=['post'])
+    @parser_classes([JSONParser])
     def prepare_data(self, request, pk=None):
         flow = self.get_object()
         #print('start')
         #print(type(request.body))
-        
         #print('end')
         #data = flow.data
+        df = filter_data(request.data['cols'], request.data['colFilter'], request.data['constraints'])
         
-        #df = filter_data(request.data['cols'], request.data['colFilter'], request.data['constraints'])
         return Response({'status': 'password set'})
 
     

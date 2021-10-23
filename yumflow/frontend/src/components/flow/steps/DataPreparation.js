@@ -233,8 +233,8 @@ function DataPreparation() {
     const Pconstraints = []
     const Pcols = []
     const sendInfo = () => {
-        let constraints = 0//Pconstraints
-        let cols = 0//Pcols[0]
+        let constraints = Pconstraints
+        let cols = Object.values(Pcols[0])
         let colFilter = 0
         if (document.getElementById('radioChooseCol2').checked) {
             colFilter = 1
