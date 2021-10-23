@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from io import BytesIO
-import requests
 
 
 def read_CSV_data(csv_byte, labels):
@@ -31,7 +30,7 @@ def filter_data(cols, colFilter, constraints):
     print(constraints)
     return 1
 
-
+'''
 def instagram_accounts_exists(accounts):
     import requests
     notTaken = []
@@ -41,3 +40,4 @@ def instagram_accounts_exists(accounts):
         if response.status_code == 404:
             notTaken.append(i)
     return notTaken
+'''
