@@ -70,4 +70,17 @@ function ActionPrepareData(id, data){
     return res
 }
 
-export {ActionGetAllFlows, ActionCreateFlow, ActionSetData, ActionGetGatheringDataInfo, ActionGetFlow, ActionAppendData, ActionPrepareData}
+function ActionTrainData(id, data){
+    const link = `${URL}flows/${id}/train_data/`
+    
+    let res = fetch(link, {
+        method: 'POST',
+        headers: tokenConfig().headers,
+        body: JSON.stringify(data),
+    })
+        .then(response => response.json())
+    
+    return res
+}
+
+export {ActionGetAllFlows, ActionCreateFlow, ActionSetData, ActionGetGatheringDataInfo, ActionGetFlow, ActionAppendData, ActionPrepareData, ActionTrainData}

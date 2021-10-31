@@ -6,6 +6,9 @@ import { SET_FLOW } from '../actions/types'
 
 import GatheringData from "./steps/GatheringData";
 import DataPreparation from "./steps/DataPreparation";
+import DataTraining from "./steps/DataTraining";
+import DataTesting from "./steps/DataTesting";
+
 
 
 const Flow = () => {
@@ -55,6 +58,36 @@ const Flow = () => {
 
                     <div id="collapseTwo" className="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
                         <DataPreparation />
+                    </div>
+                </div>
+
+
+                <div className="card">
+                    <div className="card-header" id="headingThree">
+                        <h1 className="mb-0 text-right">
+                            <button className="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                ۳. آموزش داده ها
+                            </button>
+                        </h1>
+                    </div>
+
+                    <div id="collapseTwo" className="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
+                        <DataTraining />
+                    </div>
+                </div>
+
+
+                <div className="card">
+                    <div className="card-header" id="headingThree">
+                        <h1 className="mb-0 text-right">
+                            <button className="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                ۴. تست داده ها
+                            </button>
+                        </h1>
+                    </div>
+
+                    <div id="collapseTwo" className="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
+                        <DataTesting />
                     </div>
                 </div>
             </div>

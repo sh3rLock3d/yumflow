@@ -7,7 +7,8 @@ class Flow(models.Model):
     description = models.CharField(max_length=500, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, related_name="flows", on_delete=models.CASCADE, null=True)
-    data = models.ForeignKey('DataFrame', blank=True ,null=True, on_delete=models.CASCADE,related_name='test',)
+    data = models.ForeignKey('DataFrame', blank=True ,null=True, on_delete=models.CASCADE,related_name='train',)
+    preparation = models.ForeignKey('PrepareData', blank=True ,null=True, on_delete=models.CASCADE,related_name='train_query',)
 
 
 class DataFrame(models.Model):
@@ -17,4 +18,12 @@ class DataFrame(models.Model):
     
     def info(self):
         return str(self.data)
+
+
+class PrepareData(models.Model):
+    cols = PickledObjectField()
+    colFilter = models.IntegerField(blank=True, null=True)
+    constraints = models.CharField(max_length=100,)
+    owner = models.ForeignKey(User, related_name="prepareData", on_delete=models.CASCADE, null=True)
+
 

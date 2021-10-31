@@ -1,4 +1,4 @@
-from flows.models import Flow, DataFrame
+from flows.models import Flow, DataFrame, PrepareData
 from rest_framework import viewsets, permissions
 from .serializers import DataFrameSerializers, FlowSerializers
 from rest_framework.decorators import action
@@ -70,23 +70,27 @@ class FlowViewSet(viewsets.ModelViewSet):
     @parser_classes([JSONParser])
     def prepare_data(self, request, pk=None):
         flow = self.get_object()
-        #print('start')
-        #print(type(request.body))
-        #print('end')
-        #data = flow.data
-        df = filter_data(request.data['cols'], request.data['colFilter'], request.data['constraints'])
-        
-        return Response({'status': 'password set'})
+        # df = filter_data(request.data['cols'], request.data['colFilter'], request.data['constraints'], flow.data.data)
+        preparation =  PrepareData(cols = request.data['cols'], colFilter = request.data['colFilter'], constraints= create_query(request.data['constraints']))
+        preparation.save()
+        flow.preparation = preparation
+        flow.save()
+        return Response({'status': 'done'})
 
     
 
-    
     @action(detail=True, methods=['post'])
-    def set_data_by_instagram_account(self, request, pk=None):
+    @parser_classes([JSONParser])
+    def train_data(self, request, pk=None):
         flow = self.get_object()
-        a = request.data["data"]
-        # todo
-        return Response({"error":"asdad"})
+        preparation = flow.preparation
+        df = filter_data(preparation.cols, preparation.colFilter, preparation.constraints, flow.data.data)
+
+        return Response({'status': 'done'})
+        
+
+
+
     
 
 
