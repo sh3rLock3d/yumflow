@@ -10,7 +10,7 @@ from .createModel.set_config import SetConfig
 
 
 def read_CSV_data(csv_byte, labels):
-    df = pd.read_csv(BytesIO(csv_byte))
+    df = pd.read_csv(BytesIO(csv_byte) , delimiter = "|")
     if (labels):
         now = pd.to_datetime("now")
         df['Time'] = [now for _ in range(len(df))]
