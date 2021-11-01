@@ -74,6 +74,9 @@ def split_by_knowing(X,y,file_list,servername_list,Known_list):
 def roundup(x,roundup_length_,train_offset_):
     if x==0:
         return 0
+
+    print('X' , x)
+    print('trian offset' ,train_offset_)
     x=x+train_offset_
     return int(math.ceil(x / roundup_length_)) * int(roundup_length_)
 
@@ -660,7 +663,7 @@ def model_train_exec(sysargv1):
 
 #### loading data train and test
     training_data = pd.read_csv(os.path.join(home_address,base_name_data+'.csv'),delimiter='|',header=0)
-    X_train=training_data.loc[:, (training_data.columns!='label') & (training_data.columns!='filename') & (training_data.columns!='server_name')].values.tolist()
+    X_train=training_data.loc[:, (training_data.columns!='label') & (training_data.columns!='filename') & (training_data.columns!='server_name') & (training_data.columns!='Time')].values.tolist()
     y_train=training_data['label'].tolist()
     list_filename_train=training_data['filename'].tolist()
     list_servername_train=training_data['server_name'].tolist()
@@ -668,7 +671,7 @@ def model_train_exec(sysargv1):
     all_Known_list=sorted(list(set(y_train)))
 
     test_data = pd.read_csv(os.path.join(home_address,base_name_data_test+'.csv'),delimiter='|',header=0)
-    X_test=test_data.loc[:, (test_data.columns!='label') & (test_data.columns!='filename') & (test_data.columns!='server_name')].values.tolist()
+    X_test=test_data.loc[:, (test_data.columns!='label') & (test_data.columns!='filename') & (test_data.columns!='server_name') & (test_data.columns!='Time')].values.tolist()
     y_test=test_data['label'].tolist()
     list_filename_test=test_data['filename'].tolist()
     list_servername_test=test_data['server_name'].tolist()

@@ -83,13 +83,13 @@ class FlowViewSet(viewsets.ModelViewSet):
     @parser_classes([JSONParser])
     def train_data(self, request, pk=None):
         flow = self.get_object()
+        print("HIIIIIIIIIIIIIIIIIIII")
+        print(flow.data.data)
         preparation = flow.preparation
         df = filter_data(preparation.cols, preparation.colFilter, preparation.constraints, flow.data.data)
 
         return Response({'status': 'done'})
         
-
-
 
     
 
