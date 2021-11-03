@@ -83,4 +83,16 @@ function ActionTrainData(id, data){
     return res
 }
 
-export {ActionGetAllFlows, ActionCreateFlow, ActionSetData, ActionGetGatheringDataInfo, ActionGetFlow, ActionAppendData, ActionPrepareData, ActionTrainData}
+function ActionTestData(id, data){
+    const setTestAndTrainDataURL = `${URL}flows/${id}/test_data/`
+    let res = fetch(setTestAndTrainDataURL, {
+        method: 'POST',
+        headers: tokenConfigForm().headers,
+        body: data,
+    })
+        .then(response => response.json())
+    
+    return res
+}
+
+export {ActionGetAllFlows, ActionCreateFlow, ActionSetData, ActionGetGatheringDataInfo, ActionGetFlow, ActionAppendData, ActionPrepareData, ActionTrainData, ActionTestData}

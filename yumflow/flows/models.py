@@ -1,6 +1,7 @@
 from django.db import models
 from picklefield.fields import PickledObjectField
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 class Flow(models.Model):
     title = models.CharField(max_length=100, unique=True)
@@ -9,6 +10,8 @@ class Flow(models.Model):
     owner = models.ForeignKey(User, related_name="flows", on_delete=models.CASCADE, null=True)
     data = models.ForeignKey('DataFrame', blank=True ,null=True, on_delete=models.CASCADE,related_name='train',)
     preparation = models.ForeignKey('PrepareData', blank=True ,null=True, on_delete=models.CASCADE,related_name='train_query',)
+    modelOfTrain = models.ForeignKey('ModelOfTrain', blank=True ,null=True, on_delete=models.CASCADE,related_name='modelOfTrain',)
+
 
 
 class DataFrame(models.Model):
@@ -27,3 +30,11 @@ class PrepareData(models.Model):
     owner = models.ForeignKey(User, related_name="prepareData", on_delete=models.CASCADE, null=True)
 
 
+def user_directory_path(instance, filename):
+    return 'uploads/1.tzt'
+
+class ModelOfTrain(models.Model):
+    owner = models.ForeignKey(User, related_name="modelOfTrain", on_delete=models.CASCADE, null=True)
+    upload = models.FileField(upload_to='uploads/')
+    
+    

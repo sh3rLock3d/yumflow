@@ -77,4 +77,9 @@ def filter_data(cols, colFilter, constraints, df):
     df.to_csv(file_name, sep='|', encoding='utf-8')
     a = SetConfig(True)
     b = Create()
-    return df
+
+def test_data(df):
+    file_name = 'flows/MLTools/createModel/test.csv'
+    df.to_csv(file_name, sep='|', encoding='utf-8')
+    a = SetConfig(False)
+    b = Create()

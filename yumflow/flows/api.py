@@ -1,4 +1,4 @@
-from flows.models import Flow, DataFrame, PrepareData
+from flows.models import Flow, DataFrame, PrepareData, ModelOfTrain
 from rest_framework import viewsets, permissions
 from .serializers import DataFrameSerializers, FlowSerializers
 from rest_framework.decorators import action
@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from .MLTools.main import *
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import JSONParser
+from django.core.files import File
+import os
 
 class FlowViewSet(viewsets.ModelViewSet):
     permission_classes = [
@@ -83,14 +85,31 @@ class FlowViewSet(viewsets.ModelViewSet):
     @parser_classes([JSONParser])
     def train_data(self, request, pk=None):
         flow = self.get_object()
-        print("HIIIIIIIIIIIIIIIIIIII")
         print(flow.data.data)
         preparation = flow.preparation
-        df = filter_data(preparation.cols, preparation.colFilter, preparation.constraints, flow.data.data)
-
+        filter_data(preparation.cols, preparation.colFilter, preparation.constraints, flow.data.data)
+        print('hereeeeeeeeeeeeeeeeeeeeeee')
+        
+        with File(open('flows/MLTools/createModel/final_test/insta_trained_model.txt', mode='rb'), name='insta_trained_model.txt') as f:
+            m = ModelOfTrain(upload=f)
+            m.save()
+            flow.modelOfTrain = m
+            flow.save()
+            
+        
+        
         return Response({'status': 'done'})
         
-
+    @action(detail=True, methods=['post'])
+    @parser_classes([JSONParser])
+    def test_data(self, request, pk=None):
+        flow = self.get_object()
+        m = flow.modelOfTrain.upload
+        os.popen(f'cp {m.path} flows/MLTools/createModel/final_test/insta_trained_model.txt')
+        data =  request.FILES.get("testData")
+        data = read_CSV_data(data.read(), False)        
+        test_data(data)
+        return Response({'status': 'doneee'})
     
 
 
