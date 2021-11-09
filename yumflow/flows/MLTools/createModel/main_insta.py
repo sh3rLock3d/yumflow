@@ -67,10 +67,13 @@ class Create:
             insta_model.model_train_exec(train_data_file_name)
             
         # #final test models, always we have test
+        result = []
         if has_test:
             file_names,predicted=insta_model.model_test_exec(test_data_file_name)
             for index_temp in range(len(file_names)):
                 print(index_temp,file_names[index_temp],predicted[index_temp])
+                result.append(index_temp,file_names[index_temp],predicted[index_temp])
+            return(result)
 
             
 
