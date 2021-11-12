@@ -64,21 +64,25 @@ export const loadUser = () => {
 }
 
 export const logout = (dispatch) => {
-    let link = '/api/auth/logout/'
-    let res = fetch(link, {
-        method: 'POST',
-        headers: tokenConfig().headers,
+    return new Promise((resolve, reject) => {
+        let link = '/api/auth/logout/'
+        let res = fetch(link, {
+            method: 'POST',
+            headers: tokenConfig().headers,
+        })
+            .then(data=>{
+                if(200 <= data.status < 300) {
+                    dispatch({type: LOGOUT_SUCCESS, payload: data});
+                    resolve()
+                } else {
+                    throw new Error('error')
+                }
+            })
+            .catch(err =>{
+                console.log(err);
+                reject()
+            })
     })
-        .then(data=>{
-            if(200 <= data.status < 300) {
-                dispatch({type: LOGOUT_SUCCESS, payload: data});
-            } else {
-                throw new Error('error')
-            }
-        })
-        .catch(err =>{
-            console.log(err);
-        })
 }
 
 

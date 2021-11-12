@@ -2,9 +2,11 @@ import React, { useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Context } from '../../Store'
 import { loadUser, logout } from '../actions/ActionAuth'
+import { useHistory } from "react-router-dom"
 
 function Header() {
     const [state, dispatch] = useContext(Context);
+    const history = useHistory()
 
     const isAuthenticated = state.auth.isAuthenticated
     const user = state.auth.user
@@ -15,7 +17,9 @@ function Header() {
     }
 
     const logoutUser = ()=>{
-        logout(dispatch)
+        logout(dispatch).then(() => {
+            history.push("/")
+        }).catch(() => {})
     }
 
 

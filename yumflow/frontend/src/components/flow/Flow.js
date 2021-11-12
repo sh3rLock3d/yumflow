@@ -13,6 +13,7 @@ import DataTesting from "./steps/DataTesting";
 
 const Flow = () => {
     const { id } = useParams();
+    const [error, setError] = useState(false);
 
     const [state, dispatch] = useContext(Context);
     const flow = state["auth"]["flow"]
@@ -24,6 +25,7 @@ const Flow = () => {
             })
             .catch((error) => {
                 console.error('Error:', error);
+                setError(true);
             });
         return <p>loading...</p>
     }
@@ -91,6 +93,7 @@ const Flow = () => {
                     </div>
                 </div>
             </div>
+            {error && <p style="color: red;">Error!</p>}
         </div >
     )
 }

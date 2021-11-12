@@ -227,6 +227,8 @@ function DataPreparation() {
     const [state, dispatch] = useContext(Context);
     const flow = state["auth"]["flow"]
 
+    const [error, setError] = useState(false);
+
     // rows
 
 
@@ -249,6 +251,7 @@ function DataPreparation() {
             })
             .catch((error) => {
                 console.error('Error:', error);
+                setError(true);
             });
     }
 
@@ -266,6 +269,7 @@ function DataPreparation() {
             <div className="container p-2 shadow-sm text-right">
                 <p>hi</p>
             </div>
+            {error && <p style="color: red;">Error!</p>}
         </>
     )
 }

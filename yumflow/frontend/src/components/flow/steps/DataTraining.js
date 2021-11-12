@@ -6,6 +6,8 @@ const DataTraining = () => {
     const [state, dispatch] = useContext(Context);
     const flow = state["auth"]["flow"]
 
+    const [error, setError] = useState(false);
+
     const sendInfo = () => {
         let label = document.getElementById('trainLable').value
         ActionTrainData(flow.id, {label})
@@ -14,6 +16,7 @@ const DataTraining = () => {
         })
         .catch((error) => {
             console.error('Error:', error);
+            setError(true);
         });
     }
 
@@ -32,6 +35,7 @@ const DataTraining = () => {
                         ساخت مدل
                     </button>
                 </div>
+                {error && <p style="color: red;">Error!</p>}
             </div>
         </>
     )

@@ -1,8 +1,9 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { Context } from '../../Store'
 import { login } from '../actions/ActionAuth'
-import {LOGIN_SUCCESS} from '../actions/types'
+import { LOGIN_SUCCESS } from '../actions/types'
+import { useHistory } from "react-router-dom"
 
 function Login() {
     /*
@@ -12,6 +13,9 @@ function Login() {
     };
     */
     const [state, dispatch] = useContext(Context);
+    const [error, setError] = useState(false);
+
+    const history = useHistory()
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -23,9 +27,11 @@ function Login() {
             .then(data => {
                 console.log("success"+data)
                 dispatch({type: LOGIN_SUCCESS, payload: data});
+                history.push('/')
             })
             .catch((error) => {
                 console.error('Error:', error);
+                setError(true);
             });
 
     };
@@ -60,6 +66,7 @@ function Login() {
                         <button type="submit" className="btn btn-primary">
                             Login
                         </button>
+                        {error && <p style={{color: "red"}}>Login failed!</p>}
                     </div>
                     <p>
                         Don't have an account? <Link to="/register">Register</Link>

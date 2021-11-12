@@ -8,6 +8,8 @@ function InsertData({ id }) {
     const [state, dispatch] = useContext(Context);
     const flow = state["auth"]["flow"]
 
+    const [error, setError] = useState(false);
+
     function InsertDataReq() {
         const data = new FormData();
         data.append("trainData", document.getElementById("formFile_TrainData").files[0],)
@@ -20,6 +22,7 @@ function InsertData({ id }) {
             })
             .catch((error) => {
                 console.error('Error:', error);
+                setError(true);
             });
     }
 
@@ -36,7 +39,7 @@ function InsertData({ id }) {
             </div>
 
             <button type="button" className="btn btn-primary" onClick={InsertDataReq}>ارسال</button>
-
+            {error && <p style="color: red;">Error!</p>}
         </div>
     </form>
 
@@ -46,6 +49,8 @@ function InsertData({ id }) {
 function AppendData({ id }) {
     const [state, dispatch] = useContext(Context);
     const flow = state["auth"]["flow"]
+
+    const [error, setError] = useState(false);
 
     function InsertDataReq() {
         const data = new FormData();
@@ -59,6 +64,7 @@ function AppendData({ id }) {
             })
             .catch((error) => {
                 console.error('Error:', error);
+                setError(true);
             });
     }
 
@@ -77,7 +83,7 @@ function AppendData({ id }) {
             </div>
 
             <button type="button" className="btn btn-primary" onClick={InsertDataReq}>ارسال</button>
-
+            {error && <p style="color: red;">Error!</p>}
         </div>
     </form>
 
@@ -88,6 +94,8 @@ function AppendData({ id }) {
 function ShowData({ id }) {
     const [state, dispatch] = useContext(Context);
     const flow = state["auth"]["flow"]
+
+    const [error, setError] = useState(false);
 
 
     const [chart, setCart] = useState({ 'state': 'hidden', 'data': null });
@@ -103,6 +111,7 @@ function ShowData({ id }) {
             })
             .catch((error) => {
                 console.error('Error:', error);
+                setError(true);
             });
     }
 
@@ -120,7 +129,8 @@ function ShowData({ id }) {
             <i class="bi bi-arrow-repeat"></i>
         </button>
         <button type="button" onClick={hideData} className="btn btn-primary">مخفی کردن جدول</button>
-        <Table df={chart['data']}/>        
+        <Table df={chart['data']}/>
+        {error && <p style="color: red;">Error!</p>}     
     </>
 
     

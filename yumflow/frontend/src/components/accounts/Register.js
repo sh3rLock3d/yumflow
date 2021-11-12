@@ -1,13 +1,16 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { Context } from '../../Store'
 import { register } from '../actions/ActionAuth'
 import {REGISTER_SUCCESS} from '../actions/types'
-
+import { useHistory } from "react-router-dom"
 
 
 const Register = () => {
   const [state, dispatch] = useContext(Context);
+  const [error, setError] = useState(false);
+  const [passwordsDontMatch, setPasswordsDontMatch] = useState(false);
+  const history = useHistory();
 
   const onSubmit = (e) => {
     console.log('hello');
@@ -18,6 +21,7 @@ const Register = () => {
     let password2 = document.getElementById('formRegisterpass2').value
     if (password !== password2) {
       console.log('error Passwords do not match')
+      setPasswordsDontMatch(true);
     } else {
       const newUser = {
         username,
@@ -28,9 +32,11 @@ const Register = () => {
         .then(data => {
           console.log("success" + data)
           dispatch({ type: REGISTER_SUCCESS, payload: data });
+          history.push("/");
         })
         .catch((error) => {
           console.error('Error:', error);
+          setError(true);
         });
     }
   };
@@ -81,6 +87,8 @@ const Register = () => {
             <button type="submit" className="btn btn-primary">
               Register
             </button>
+            {passwordsDontMatch && <p style="color: red;">Passwords must match!</p>}
+            {error && <p style="color: red;">Registration failed!</p>}
           </div>
           <p>
             Already have an account? <Link to="/login">Login</Link>

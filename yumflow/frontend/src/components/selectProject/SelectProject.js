@@ -6,14 +6,18 @@ import { Context } from '../../Store'
 
 // https://stackoverflow.com/questions/53219113/where-can-i-make-api-call-with-hooks-in-react
 function SelectProject() {
-    const [projects, setProjects] = React.useState(null);
-    React.useEffect(() => {
+    const [projects, setProjects] = useState(null);
+    const [error, setError] = useState(false);
+    const [submitError, setSubmitError] = useState(false);
+
+    useEffect(() => {
         ActionGetAllFlows()
             .then(data => {
                 setProjects(data);
             })
             .catch((error) => {
                 console.error('Error:', error);
+                setError(true);
             });
     }, []);
 
@@ -24,7 +28,7 @@ function SelectProject() {
         history.push(`/flow/${flow.id}`)
     }
 
-    const listItems = !projects ? <p>loading</p> : projects.map((flow) =>
+    const listItems = !projects ? error ? <p style="color: red;">Error loading prjects!</p> : <p>loading</p> : projects.map((flow) =>
         <div className="row" key={flow.id}>
             <div className="card m-3 text-right col" onClick={() => onFlowClicked(flow)} >
                 <div className="card-body">
@@ -53,6 +57,7 @@ function SelectProject() {
             })
             .catch((error) => {
                 console.error('Error:', error);
+                setSubmitError(true);
             });
     }
 
@@ -71,6 +76,7 @@ function SelectProject() {
                         <small id="descriptionHelp" className="form-text text-muted">نوشتن توضیحات اختیاری است.</small>
                     </div>
                     <button className="btn btn-primary">Submit</button>
+                    {submitError && <p style="color: red;">Error submiting form!</p>}
                 </form>
             </div>
         </div>
