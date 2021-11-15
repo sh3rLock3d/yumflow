@@ -88,7 +88,7 @@ class FlowViewSet(viewsets.ModelViewSet):
         print(flow.data.data)
         preparation = flow.preparation
         filter_data(preparation.cols, preparation.colFilter, preparation.constraints, flow.data.data)
-        print('hereeeeeeeeeeeeeeeeeeeeeee')
+        
         
         with File(open('flows/MLTools/createModel/final_test/insta_trained_model.txt', mode='rb'), name='insta_trained_model.txt') as f:
             m = ModelOfTrain(upload=f)
@@ -108,8 +108,8 @@ class FlowViewSet(viewsets.ModelViewSet):
         os.popen(f'cp {m.path} flows/MLTools/createModel/final_test/insta_trained_model.txt')
         data =  request.FILES.get("testData")
         data = read_CSV_data(data.read(), False)        
-        test_data(data)
-        return Response({'status': 'doneee'})
+        res = test_data(data)
+        return Response({'result': res})
     
 
 
