@@ -111,6 +111,7 @@ class FlowViewSet(viewsets.ModelViewSet):
 
         preparation = flow.preparation
 
+
         if preparation == None:
             content = {'message': 'ابتدا داده ها را وارد کنید'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
@@ -137,8 +138,10 @@ class FlowViewSet(viewsets.ModelViewSet):
         os.popen(f'cp {m.path} flows/MLTools/createModel/final_test/insta_trained_model.txt')
         data =  request.FILES.get("testData")
         data = read_CSV_data(data.read(), False)        
-        test_data(data)
-        return Response({'status': 'done'})
+
+        res = test_data(data)
+        return Response({'result': res})
+
     
 
 

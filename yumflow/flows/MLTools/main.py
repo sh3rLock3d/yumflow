@@ -83,3 +83,4 @@ def test_data(df):
     df.to_csv(file_name, sep='|', encoding='utf-8')
     a = SetConfig(False)
     b = Create()
+    return b
