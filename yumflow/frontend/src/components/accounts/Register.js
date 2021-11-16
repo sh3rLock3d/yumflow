@@ -1,9 +1,10 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { Context } from '../../Store'
-import { register } from '../actions/ActionAuth'
-import {REGISTER_SUCCESS} from '../actions/types'
-import { useHistory } from "react-router-dom"
+import { Context } from '../../Store';
+import { register } from '../actions/ActionAuth';
+import {REGISTER_SUCCESS} from '../actions/types';
+import { useHistory } from 'react-router-dom';
+import Snackbar from '../common/MySnackbar';
 
 
 const Register = () => {
@@ -87,14 +88,24 @@ const Register = () => {
             <button type="submit" className="btn btn-primary">
               Register
             </button>
-            {passwordsDontMatch && <p style="color: red;">Passwords must match!</p>}
-            {error && <p style="color: red;">Registration failed!</p>}
           </div>
           <p>
             Already have an account? <Link to="/login">Login</Link>
           </p>
         </form>
       </div>
+        <Snackbar
+          open={error}
+          onClose={() => setError(false)}
+          message="خطا در ثبت نام!"
+          variant="error"
+        />
+        <Snackbar
+          open={passwordsDontMatch}
+          onClose={() => setPasswordsDontMatch(false)}
+          message="تکرار رمزعبور متفاوت است!"
+          variant="error"
+        />
     </div>
   );
 }
