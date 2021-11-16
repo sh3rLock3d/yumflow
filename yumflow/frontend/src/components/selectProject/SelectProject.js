@@ -76,7 +76,12 @@ function SelectProject() {
                         <small id="descriptionHelp" className="form-text text-muted">نوشتن توضیحات اختیاری است.</small>
                     </div>
                     <button className="btn btn-primary">Submit</button>
-                    {submitError && <p style="color: red;">Error submiting form!</p>}
+                    <Snackbar
+                      open={error}
+                      onClose={() => setError(false)}
+                      message="خطا در ارسال فرم!"
+                      variant="error"
+                    />
                 </form>
             </div>
         </div>

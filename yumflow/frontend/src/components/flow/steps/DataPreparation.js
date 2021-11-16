@@ -269,7 +269,12 @@ function DataPreparation() {
             <div className="container p-2 shadow-sm text-right">
                 <p>hi</p>
             </div>
-            {error && <p style="color: red;">Error!</p>}
+            <Snackbar
+              open={error}
+              onClose={() => setError(false)}
+              message="خطا در ورود!"
+              variant="error"
+            />
         </>
     )
 }

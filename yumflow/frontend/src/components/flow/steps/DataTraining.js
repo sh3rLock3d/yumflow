@@ -35,7 +35,12 @@ const DataTraining = () => {
                         ساخت مدل
                     </button>
                 </div>
-                {error && <p style="color: red;">Error!</p>}
+                <Snackbar
+                  open={error}
+                  onClose={() => setError(false)}
+                  message="خطا در ورود!"
+                  variant="error"
+                />
             </div>
         </>
     )

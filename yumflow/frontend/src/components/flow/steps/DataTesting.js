@@ -29,7 +29,12 @@ const DataTesting = () => {
             <input type="file" className="form-control-file" id="formFile_TestData" />
             <button type="button" className="btn btn-primary" onClick={testDataReq}>ارسال</button>
         </div>
-        {error && <p style="color: red;">Error!</p>}
+        <Snackbar
+          open={error}
+          onClose={() => setError(false)}
+          message="خطا در ورود!"
+          variant="error"
+        />
     </form>
 
     return form

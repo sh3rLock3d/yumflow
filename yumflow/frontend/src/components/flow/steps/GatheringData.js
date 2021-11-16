@@ -39,7 +39,12 @@ function InsertData({ id }) {
             </div>
 
             <button type="button" className="btn btn-primary" onClick={InsertDataReq}>ارسال</button>
-            {error && <p style="color: red;">Error!</p>}
+            <Snackbar
+              open={error}
+              onClose={() => setError(false)}
+              message="خطا در ورود!"
+              variant="error"
+            />
         </div>
     </form>
 
@@ -83,7 +88,12 @@ function AppendData({ id }) {
             </div>
 
             <button type="button" className="btn btn-primary" onClick={InsertDataReq}>ارسال</button>
-            {error && <p style="color: red;">Error!</p>}
+            <Snackbar
+              open={error}
+              onClose={() => setError(false)}
+              message="خطا در ورود!"
+              variant="error"
+            />
         </div>
     </form>
 
@@ -130,7 +140,12 @@ function ShowData({ id }) {
         </button>
         <button type="button" onClick={hideData} className="btn btn-primary">مخفی کردن جدول</button>
         <Table df={chart['data']}/>
-        {error && <p style="color: red;">Error!</p>}     
+        <Snackbar
+          open={error}
+          onClose={() => setError(false)}
+          message="خطا در ورود!"
+          variant="error"
+        />    
     </>
 
     

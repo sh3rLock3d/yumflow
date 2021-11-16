@@ -1,8 +1,9 @@
 import React, { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { Context } from '../../Store'
+import { Context } from '../../Store';
 import { ActionGetFlow } from "../actions/Action";
-import { SET_FLOW } from '../actions/types'
+import { SET_FLOW } from '../actions/types';
+import Snackbar from '../common/MySnackbar';
 
 import GatheringData from "./steps/GatheringData";
 import DataPreparation from "./steps/DataPreparation";
@@ -93,7 +94,12 @@ const Flow = () => {
                     </div>
                 </div>
             </div>
-            {error && <p style="color: red;">Error!</p>}
+            <Snackbar
+              open={error}
+              onClose={() => setError(false)}
+              message="خطا!"
+              variant="error"
+            />
         </div >
     )
 }
