@@ -9,8 +9,7 @@ class Flow(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, related_name="flows", on_delete=models.CASCADE, null=True)
     data = models.ForeignKey('DataFrame', blank=True ,null=True, on_delete=models.CASCADE,related_name='train',)
-    preparation = models.ForeignKey('PrepareData', blank=True ,null=True, on_delete=models.CASCADE,related_name='train_query',)
-    modelOfTrain = models.ForeignKey('ModelOfTrain', blank=True ,null=True, on_delete=models.CASCADE,related_name='modelOfTrain',)
+    modelResult = models.ManyToManyField('ModelResult', blank=True)
 
 
 
@@ -21,6 +20,13 @@ class DataFrame(models.Model):
     
     def info(self):
         return str(self.data)
+
+class ModelResult(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    preparation = models.ForeignKey('PrepareData', blank=True ,null=True, on_delete=models.CASCADE,related_name='train_query',)
+    modelOfTrain = models.ForeignKey('ModelOfTrain', blank=True ,null=True, on_delete=models.CASCADE,related_name='modelOfTrain',)
+    testResult = models.ForeignKey('TestResult', blank=True ,null=True, on_delete=models.CASCADE,related_name='testResult',)
+    owner = models.ForeignKey(User, related_name="modelResult", on_delete=models.CASCADE, null=True)
 
 
 class PrepareData(models.Model):
@@ -37,4 +43,7 @@ class ModelOfTrain(models.Model):
     owner = models.ForeignKey(User, related_name="modelOfTrain", on_delete=models.CASCADE, null=True)
     upload = models.FileField(upload_to='uploads/')
     
-    
+
+class TestResult(models.Model):
+    owner = models.ForeignKey(User, related_name="testResult", on_delete=models.CASCADE, null=True)
+    score = models.FloatField(default=-1.0)

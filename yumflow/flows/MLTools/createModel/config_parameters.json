@@ -2,8 +2,8 @@
     "main": {
         "change_train_data": false,
         "change_test_data": false,
-        "has_train": false,
-        "has_test": true,
+        "has_train": true,
+        "has_test": false,
         "train_data_folder": "./train.csv",
         "test_data_folder": "./test.csv",
         "read_last_train_files_splitted": false,

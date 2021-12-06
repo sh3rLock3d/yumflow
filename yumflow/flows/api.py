@@ -1,4 +1,4 @@
-from flows.models import Flow, DataFrame, PrepareData, ModelOfTrain
+from flows.models import Flow, DataFrame, ModelResult, PrepareData, ModelOfTrain
 from rest_framework import viewsets, permissions
 from .serializers import DataFrameSerializers, FlowSerializers
 from rest_framework.decorators import action
@@ -91,6 +91,13 @@ class FlowViewSet(viewsets.ModelViewSet):
     def prepare_data(self, request, pk=None):
         flow = self.get_object()
         # df = filter_data(request.data['cols'], request.data['colFilter'], request.data['constraints'], flow.data.data)
+        
+        name = request.data['name']
+
+        if request.data['name'] == None:
+            content = {'message': 'برای مدل جدید داده ای انتخاب نشده است.'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        
         try:
             preparation =  PrepareData(cols = request.data['cols'], colFilter = request.data['colFilter'], constraints= create_query(request.data['constraints']))
         except:
@@ -98,19 +105,57 @@ class FlowViewSet(viewsets.ModelViewSet):
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
         preparation.save()
-        flow.preparation = preparation
+        
+        try:
+            modelOfResult = ModelResult(name=name, preparation=preparation)
+        except:
+            content = {'message': 'نام تکراری است'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+        modelOfResult.save()
+
+        flow.modelResult.add(modelOfResult)
         flow.save()
+
         return Response({'status': 'done'})
 
-    
+    @action(detail=True, methods=['get'])
+    @parser_classes([JSONParser])
+    def get_all_flow_models(self, request, pk=None):
+        flow = self.get_object()
+        res = []
+        for mor in flow.modelResult.all():
+            res.append({
+                "name":mor.name,
+                "id":mor.id,
+                "prepration_id":mor.preparation.id,
+                "modelOfTrain_id": mor.modelOfTrain.id if mor.modelOfTrain else None,
+                "testResult_id": mor.testResult.id if mor.testResult else None,
+                "score": mor.testResult.score if  mor.testResult else None,
+            })
+        return Response({'models': res})
 
     @action(detail=True, methods=['post'])
     @parser_classes([JSONParser])
     def train_data(self, request, pk=None):
         flow = self.get_object()
+        modelResult = None
+        id = request.data['id']
+        if id == None:
+            content = {'message': 'داده های ورودی معتبر نیست'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
-        preparation = flow.preparation
+        for mor in flow.modelResult.all():
+            if mor.id == id:
+                modelResult = mor
+                break
 
+        if modelResult == None:
+            content = {'message': 'چنین شناسه ای وجود ندارد'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+
+        preparation = modelResult.preparation
 
         if preparation == None:
             content = {'message': 'ابتدا داده ها را وارد کنید'}
@@ -125,7 +170,8 @@ class FlowViewSet(viewsets.ModelViewSet):
         with File(open('flows/MLTools/createModel/final_test/insta_trained_model.txt', mode='rb'), name='insta_trained_model.txt') as f:
             m = ModelOfTrain(upload=f)
             m.save()
-            flow.modelOfTrain = m
+            modelResult.modelOfTrain = m
+            modelResult.save()
             flow.save()
         
         return Response({'status': 'done'})
@@ -134,11 +180,28 @@ class FlowViewSet(viewsets.ModelViewSet):
     @parser_classes([JSONParser])
     def test_data(self, request, pk=None):
         flow = self.get_object()
-        m = flow.modelOfTrain.upload
+
+        modelResult = None
+        id = request.data['id']
+        if id == None:
+            content = {'message': 'داده های ورودی معتبر نیست'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+        for mor in flow.modelResult.all():
+            if mor.id == id:
+                modelResult = mor
+                break
+
+        if modelResult == None:
+            content = {'message': 'چنین شناسه ای وجود ندارد'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+        m = modelResult.modelOfTrain.upload
         os.popen(f'cp {m.path} flows/MLTools/createModel/final_test/insta_trained_model.txt')
         data =  request.FILES.get("testData")
         data = read_CSV_data(data.read(), False)        
-
         res = test_data(data)
         return Response({'result': res})
 
