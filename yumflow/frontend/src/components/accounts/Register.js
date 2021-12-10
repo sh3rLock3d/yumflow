@@ -1,47 +1,46 @@
-import React, { useEffect, useContext, useState } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { Context } from '../../Store';
-import { register } from '../actions/ActionAuth';
-import {REGISTER_SUCCESS} from '../actions/types';
-import { useHistory } from 'react-router-dom';
-import Snackbar from '../common/MySnackbar';
-
+import React, { useEffect, useContext, useState } from "react";
+import { Link, Redirect } from "react-router-dom";
+import { Context } from "../../Store";
+import { register } from "../actions/ActionAuth";
+import { REGISTER_SUCCESS } from "../actions/types";
+import { useHistory } from "react-router-dom";
+import Snackbar from "../common/MySnackbar";
 
 const Register = () => {
   const [state, dispatch] = useContext(Context);
-  const [error, setError] = useState(false);
-  const [passwordsDontMatch, setPasswordsDontMatch] = useState(false);
+  const [error, setError] = useState("");
+  const [passwordsDontMatch, setPasswordsDontMatch] = useState("");
   const history = useHistory();
 
   const onSubmit = (e) => {
-    console.log('hello');
+    console.log("hello");
     e.preventDefault();
-    let username = document.getElementById('formRegisterusername').value
-    let email = document.getElementById('formRegisterEmail').value
-    let password = document.getElementById('formRegisterpass1').value
-    let password2 = document.getElementById('formRegisterpass2').value
+    let username = document.getElementById("formRegisterusername").value;
+    let email = document.getElementById("formRegisterEmail").value;
+    let password = document.getElementById("formRegisterpass1").value;
+    let password2 = document.getElementById("formRegisterpass2").value;
     if (password !== password2) {
-      console.log('error Passwords do not match')
-      setPasswordsDontMatch(true);
+      console.log("error Passwords do not match");
+      setPasswordsDontMatch("Passwords do not match!");
     } else {
       const newUser = {
         username,
         password,
         email,
-      }; 
+      };
       register(newUser)
-        .then(data => {
-          console.log("success" + data)
+        .then((data) => data.json())
+        .then((data) => {
+          console.log("success", data);
+          if (data.username) throw new Error(data.username[0]);
           dispatch({ type: REGISTER_SUCCESS, payload: data });
           history.push("/");
         })
         .catch((error) => {
-          console.error('Error:', error);
-          setError(true);
+          setError(error.message);
         });
     }
   };
-
 
   return (
     <div className="col-md-6 m-auto">
@@ -94,21 +93,20 @@ const Register = () => {
           </p>
         </form>
       </div>
-        <Snackbar
-          open={error}
-          onClose={() => setError(false)}
-          message="خطا در ثبت نام!"
-          variant="error"
-        />
-        <Snackbar
-          open={passwordsDontMatch}
-          onClose={() => setPasswordsDontMatch(false)}
-          message="تکرار رمزعبور متفاوت است!"
-          variant="error"
-        />
+      <Snackbar
+        open={!!error}
+        onClose={() => setError("")}
+        message={error}
+        variant="error"
+      />
+      <Snackbar
+        open={!!passwordsDontMatch}
+        onClose={() => setPasswordsDontMatch("")}
+        message={passwordsDontMatch}
+        variant="error"
+      />
     </div>
   );
-}
-
+};
 
 export default Register;

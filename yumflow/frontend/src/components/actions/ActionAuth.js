@@ -9,38 +9,24 @@ export const login = (username, password) => {
     const data = { username, password }
 
     let link = URL + "auth/login"
-    let res = fetch(link, {
+    return fetch(link, {
         method: 'POST', // or 'PUT'
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
-    }).then(response => {
-        if (response.status != 200) {
-            throw new Error(response.json())
-        }
-        return response.json()
     })
-    return res
-
 };
 
 export const register = (data) => {
     let link = URL + "auth/register"
-    let res = fetch(link, {
+    return fetch(link, {
         method: 'POST', // or 'PUT'
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
-    }).then(response => {
-        if (response.status != 200) {
-            throw new Error(response.json())
-        }
-        return response.json()
     })
-    return res
-
 };
 
 export const loadUser = () => {
@@ -66,7 +52,7 @@ export const loadUser = () => {
 export const logout = (dispatch) => {
     return new Promise((resolve, reject) => {
         let link = '/api/auth/logout/'
-        let res = fetch(link, {
+        fetch(link, {
             method: 'POST',
             headers: tokenConfig().headers,
         })
@@ -112,9 +98,7 @@ export const tokenConfigForm = () => {
 
     // Headers
     const config = {
-        headers: {
-
-        },
+        headers: {},
     };
 
     // If token, add to headers config
