@@ -21,7 +21,7 @@ const Register = () => {
     let password2 = document.getElementById("formRegisterpass2").value;
     if (password !== password2) {
       console.log("error Passwords do not match");
-      setPasswordsDontMatch("Passwords do not match!");
+      setPasswordsDontMatch("رمز عبور یکسان نیست!");
     } else {
       const newUser = {
         username,
@@ -44,11 +44,12 @@ const Register = () => {
 
   return (
     <div className="col-md-6 m-auto">
-      <div className="card card-body mt-5">
-        <h2 className="text-center">Register</h2>
+      <div className="card card-body mt-5 my-card">
+        <h2 className="text-center">ثبت نام</h2>
+        <hr />
         <form onSubmit={onSubmit}>
-          <div className="form-group">
-            <label>Username</label>
+          <div className="form-group text-center">
+            <label>نام کاربری</label>
             <input
               type="text"
               className="form-control"
@@ -56,8 +57,8 @@ const Register = () => {
               id="formRegisterusername"
             />
           </div>
-          <div className="form-group">
-            <label>Email</label>
+          <div className="form-group text-center">
+            <label>پست الکترونیک</label>
             <input
               type="email"
               className="form-control"
@@ -65,8 +66,8 @@ const Register = () => {
               id="formRegisterEmail"
             />
           </div>
-          <div className="form-group">
-            <label>Password</label>
+          <div className="form-group text-center">
+            <label>رمز عبور</label>
             <input
               type="password"
               className="form-control"
@@ -74,8 +75,8 @@ const Register = () => {
               id="formRegisterpass1"
             />
           </div>
-          <div className="form-group">
-            <label>Confirm Password</label>
+          <div className="form-group text-center">
+            <label>تکرار رمز عبور</label>
             <input
               type="password"
               className="form-control"
@@ -83,13 +84,13 @@ const Register = () => {
               id="formRegisterpass2"
             />
           </div>
-          <div className="form-group">
+          <div className="form-group text-center">
             <button type="submit" className="btn btn-primary">
-              Register
+              ثبت نام
             </button>
           </div>
-          <p>
-            Already have an account? <Link to="/login">Login</Link>
+          <p className="text-center">
+            حساب کاربری دارید؟ <Link to="/login">ورود</Link>
           </p>
         </form>
       </div>

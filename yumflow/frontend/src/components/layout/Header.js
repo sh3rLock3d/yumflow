@@ -1,20 +1,14 @@
 import React, { useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { Context } from "../../Store";
-import { loadUser, logout } from "../actions/ActionAuth";
+import { logout } from "../actions/ActionAuth";
 import { useHistory } from "react-router-dom";
 
 function Header() {
   const [state, dispatch] = useContext(Context);
   const history = useHistory();
-
   const isAuthenticated = state.auth.isAuthenticated;
   const user = state.auth.user;
-  if (!isAuthenticated) {
-    if (localStorage.getItem("token")) {
-      loadUser();
-    }
-  }
 
   const logoutUser = () => {
     logout(dispatch)
@@ -25,13 +19,16 @@ function Header() {
   };
 
   const authLinks = (
-    <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-      <span className="navbar-text ml-3 text-white">
-        <strong>{user ? `${user.username}` : ""}</strong>
-      </span>
+    <ul className="navbar-nav me-auto mt-2 mt-lg-0">
+      <li className="nav-item" style={{ padding: "0.5rem" }}>
+        <span>
+          <strong>{user ? `کاربر فعلی: ${user.username}` : ""}</strong>
+        </span>
+      </li>
       <li className="nav-item active">
         <button
-          className="nav-link btn btn-light btn-sm  text-dark"
+          className="nav-link btn btn-link btn-sm"
+          style={{ margin: "auto", color: "tomato" }}
           onClick={logoutUser}
         >
           خروج
@@ -41,14 +38,14 @@ function Header() {
   );
 
   const guestLinks = (
-    <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-      <li className="nav-item active">
-        <Link to="/register" className="nav-link">
+    <ul className="navbar-nav me-auto mt-2 mt-lg-0">
+      <li className="nav-item">
+        <Link to="/register" className="btn btn-primary">
           ثبت نام
         </Link>
       </li>
-      <li className="nav-item active">
-        <Link to="/login" className="nav-link">
+      <li className="nav-item">
+        <Link to="/login" className="btn btn-primary">
           ورود
         </Link>
       </li>
@@ -57,7 +54,7 @@ function Header() {
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-      <a className="navbar-brand mr-0 ml-5" href="#">
+      <a className="navbar-brand me-3 ms-5" href="#">
         یادگیری چرخه ی ماشین
       </a>
       <button
@@ -72,22 +69,26 @@ function Header() {
         <span className="navbar-toggler-icon"></span>
       </button>
 
-      <div className="collapse navbar-collapse" id="navbarSupportedContent">
+      <div
+        className="collapse navbar-collapse ms-3"
+        id="navbarSupportedContent"
+      >
         {isAuthenticated && (
-          <ul className="navbar-nav  text-right">
-            <li className="nav-item active">
-              <Link to="/selectProject" className="nav-link">
-                ساخت مدل یادگیری <span className="sr-only">(current)</span>
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              <Link to="/selectProject" className="btn btn-primary">
+                ساخت مدل یادگیری
               </Link>
             </li>
 
-            <li className="nav-item active">
-              <Link to="/webExtraction" className="nav-link">
-                استخراج داده های وب <span className="sr-only">(current)</span>
+            <li className="nav-item">
+              <Link to="/webExtraction" className="btn btn-primary">
+                استخراج داده‌های وب
               </Link>
             </li>
           </ul>
         )}
+        <hr />
 
         {isAuthenticated ? authLinks : guestLinks}
       </div>

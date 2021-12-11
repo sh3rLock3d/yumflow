@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { ActionTestData } from "../../actions/Action";
+import { ActionTestData, ActionGetAllFlowModels } from "../../actions/Action";
 import { Context } from "../../../Store";
 import Snackbar from "../../common/MySnackbar";
 
@@ -9,10 +9,24 @@ const DataTesting = () => {
 
   const [error, setError] = useState("");
 
+  const [flowModels, setFlowModels] = useState(undefined);
+
+  if (!flowModels)
+    ActionGetAllFlowModels(flow.id)
+      .then((data) => data.json())
+      .then((data) => {
+        console.log(data);
+        setFlowModels(data.models);
+      })
+      .catch(() => {
+        console.log("AAAAAAAA");
+      });
+
   function testDataReq() {
     const data = new FormData();
     data.append(
       "testData",
+      document.getElementById("test-flow-models-select").value,
       document.getElementById("formFile_TestData").files[0]
     );
 
@@ -30,6 +44,18 @@ const DataTesting = () => {
 
   const form = (
     <form>
+      <select
+        className="form-select"
+        name="test-flow-models-select"
+        id="test-flow-models-select"
+      >
+        {flowModels &&
+          flowModels.map((model) => (
+            <option key={model.id} value={model.id}>
+              {model.name}
+            </option>
+          ))}
+      </select>
       <div className="form-group text-right">
         <label htmlFor="formFile_TestData">
           داده های خود را به صورت CSV در این جا آپلود کنید

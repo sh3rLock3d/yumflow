@@ -115,7 +115,7 @@ function AppendData({ id }) {
 
   const form = (
     <form>
-      <div className="form-group text-right">
+      <div className="form-group text-center">
         <label htmlFor="formFile_TrainDataAppend">
           برای اضافه کردن به داده های قبلی می توانید داده های جدید را در این
           مکان اضافه کنید.

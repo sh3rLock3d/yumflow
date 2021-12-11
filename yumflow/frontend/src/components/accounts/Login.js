@@ -40,11 +40,12 @@ function Login() {
 
   return (
     <div className="col-md-6 m-auto">
-      <div className="card card-body mt-5">
-        <h2 className="text-center">Login</h2>
+      <div className="card card-body mt-5 my-card">
+        <h2 className="text-center">ورود</h2>
+        <hr />
         <form onSubmit={onSubmit}>
-          <div className="form-group">
-            <label>Username</label>
+          <div className="form-group text-center">
+            <label>نام کاربری</label>
             <input
               type="text"
               id="LoginUsernameInput"
@@ -53,8 +54,8 @@ function Login() {
             />
           </div>
 
-          <div className="form-group">
-            <label>Password</label>
+          <div className="form-group text-center">
+            <label>رمز عبور</label>
             <input
               type="password"
               id="LoginPasswordInput"
@@ -63,13 +64,13 @@ function Login() {
             />
           </div>
 
-          <div className="form-group">
+          <div className="form-group text-center">
             <button type="submit" className="btn btn-primary">
-              Login
+              ورود
             </button>
           </div>
-          <p>
-            Don't have an account? <Link to="/register">Register</Link>
+          <p className="text-center">
+            حساب کاربری ندارید؟ <Link to="/register">ثبت نام</Link>
           </p>
         </form>
       </div>

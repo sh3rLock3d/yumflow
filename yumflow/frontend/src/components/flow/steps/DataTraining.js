@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../../../Store";
-import { ActionTrainData } from "../../actions/Action";
+import { ActionTrainData, ActionGetAllFlowModels } from "../../actions/Action";
 import Snackbar from "../../common/MySnackbar";
 
 const DataTraining = () => {
@@ -9,9 +9,22 @@ const DataTraining = () => {
 
   const [error, setError] = useState(false);
 
+  const [flowModels, setFlowModels] = useState(undefined);
+
+  if (!flowModels)
+    ActionGetAllFlowModels(flow.id)
+      .then((data) => data.json())
+      .then((data) => {
+        console.log(data);
+        setFlowModels(data.models);
+      })
+      .catch(() => {
+        console.log("AAAAAAAA");
+      });
+
   const sendInfo = () => {
-    let label = document.getElementById("trainLable").value;
-    ActionTrainData(flow.id, { label })
+    let name = document.getElementById("flow-models-select").value;
+    ActionTrainData(flow.id, { name })
       .then((data) => data.json())
       .then((data) => {
         console.log(data);
@@ -28,12 +41,18 @@ const DataTraining = () => {
       <div className="container p-2 shadow-sm text-right">
         <div className="row justify-center">
           <div className="col-3" id="column_inputs">
-            <input
-              className="form-control"
-              id="trainLable"
-              type="text"
-              placeholder="نام ستون لیبل"
-            />
+            <select
+              className="form-select"
+              name="flow-models-select"
+              id="flow-models-select"
+            >
+              {flowModels &&
+                flowModels.map((model) => (
+                  <option key={model.id} value={model.id}>
+                    {model.name}
+                  </option>
+                ))}
+            </select>
           </div>
         </div>
       </div>

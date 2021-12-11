@@ -12,6 +12,7 @@ const ChooseRows = ({ Pconstraints }) => {
   Pconstraints.push(...constraints["and"]);
   const addConditionAnd = () => {
     let cname = document.getElementById("chooseRowCol").value;
+    if (!cname) return;
     let b =
       "1" == document.getElementById("chooseRowColFormCustomSelect").value;
     let c = constraints["or"];
@@ -59,6 +60,7 @@ const ChooseRows = ({ Pconstraints }) => {
     let valueCondition = document.getElementById(
       "ChooseRowsvalueCondition"
     ).value;
+    if (!valueCondition) return;
     document.getElementById("ChooseRowsLogicCondition").value = "==";
     document.getElementById("ChooseRowsvalueCondition").value = "";
     setConstraints({
@@ -79,8 +81,8 @@ const ChooseRows = ({ Pconstraints }) => {
 
   return (
     <div className="container p-2 shadow-sm text-right">
-      <h5>آماده سازی سطر ها</h5>
-      <p>در این قسمت شرط هایی که برای انتخاب یک سطر لازم است را وارد کنید</p>
+      <h5>آماده‌سازی سطرها</h5>
+      <p>در این قسمت شرط‌هایی که برای انتخاب یک سطر لازم است را وارد کنید</p>
       <div className="container">
         <div className="row align-items-center">
           <div className="col-auto">
@@ -118,8 +120,8 @@ const ChooseRows = ({ Pconstraints }) => {
                 <option value="<"> &gt; </option>
                 <option value="!="> != </option>
                 <option value=">"> &lt;</option>
-                <option value="isin"> iSIn</option>
-                <option value="~isin"> ~iSIn</option>
+                <option value="isin"> is in</option>
+                <option value="~isin"> ~is in</option>
               </select>
             </div>
           </div>
@@ -213,7 +215,7 @@ const ChooseCols = ({ Pcols }) => {
 
   return (
     <div className="container p-2 shadow-sm text-right">
-      <h5>آماده سازی ستون ها</h5>
+      <h5>آماده‌سازی ستون‌ها</h5>
 
       <div className="form-check" dir="ltr">
         <input
@@ -226,7 +228,7 @@ const ChooseCols = ({ Pcols }) => {
           defaultChecked={statCols == 1}
         />
         <label className="form-check-label" htmlFor="radioChooseCol1">
-          انتخاب تمام ستون ها
+          انتخاب تمام ستون‌ها
         </label>
       </div>
       <div className="form-check" dir="ltr">
@@ -239,7 +241,7 @@ const ChooseCols = ({ Pcols }) => {
           onChange={oncheckColChanged}
         />
         <label className="form-check-label" htmlFor="radioChooseCol2">
-          حذف تمامی ستون ها به جز ستون های انتخابی
+          حذف ستون‌های انتخابی
         </label>
       </div>
       <div className="form-check disabled" dir="ltr">
@@ -252,10 +254,11 @@ const ChooseCols = ({ Pcols }) => {
           onChange={oncheckColChanged}
         />
         <label className="form-check-label" htmlFor="radioChooseCol3">
-          انتخاب ستون های انتخابی
+          انتخاب ستون‌ها
         </label>
       </div>
       <div style={{ display: statCols == 1 ? "none" : "block" }}>
+        {inputColDiv}
         <div className="row justify-center">
           <div className="col-3" id="column_inputs">
             <input
@@ -268,7 +271,6 @@ const ChooseCols = ({ Pcols }) => {
             />
           </div>
         </div>
-        {inputColDiv}
       </div>
     </div>
   );
@@ -293,7 +295,8 @@ function DataPreparation() {
     } else if (document.getElementById("radioChooseCol3").checked) {
       colFilter = 2;
     }
-    let data = { constraints: constraints, cols: cols, colFilter: colFilter };
+    let name = document.getElementById("constraints-name").value;
+    let data = { constraints, cols, colFilter, name };
     console.log(data);
     ActionPrepareData(flow.id, data)
       .then((data) => data.json())
@@ -309,6 +312,17 @@ function DataPreparation() {
 
   return (
     <>
+      <div className="row justify-center">
+        <div className="col-6" id="column_inputs">
+          <input
+            className="form-control"
+            id="constraints-name"
+            name="constraints-name"
+            type="text"
+            placeholder="لطفا یک نام برای شروط خود وارد کنید"
+          />
+        </div>
+      </div>
       <ChooseCols Pcols={Pcols} />
       <ChooseRows Pconstraints={Pconstraints} />
       <div className="container p-2 shadow-sm text-right">
@@ -317,9 +331,6 @@ function DataPreparation() {
             ارسال اطلاعات
           </button>
         </div>
-      </div>
-      <div className="container p-2 shadow-sm text-right">
-        <p>hi</p>
       </div>
       <Snackbar
         open={!!error}

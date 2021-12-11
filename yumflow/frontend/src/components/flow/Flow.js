@@ -31,103 +31,103 @@ const Flow = () => {
   }
 
   return (
-    <div className="col mt-3">
-      <div id="accordion">
-        <div className="card">
-          <div className="card-header" id="headingOne">
-            <h1 className="mb-0 text-right">
-              <button
-                className="btn btn-link"
-                data-toggle="collapse"
-                data-target="#collapseOne"
-                aria-expanded="true"
-                aria-controls="collapseOne"
-              >
-                ۱.جمع آوری داده ها
-              </button>
-            </h1>
-          </div>
+    <div className="row justify-content-center">
+      <div
+        id="accordion"
+        className="col-8 align-self-center accordion"
+        style={{ padding: 0 }}
+      >
+        <div className="accordion-item">
+          <h1 className="accordion-header" id="headingOne">
+            <button
+              className="accordion-button"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseOne"
+              aria-expanded="true"
+              aria-controls="collapseOne"
+            >
+              ۱.جمع آوری داده ها
+            </button>
+          </h1>
 
           <div
             id="collapseOne"
-            className="collapse show"
+            className="accordion-collapse collapse show"
             aria-labelledby="headingOne"
-            data-parent="#accordion"
+            data-bs-parent="#accordion"
           >
             <GatheringData />
           </div>
         </div>
 
-        <div className="card">
-          <div className="card-header" id="headingTwo">
-            <h1 className="mb-0 text-right">
-              <button
-                className="btn btn-link"
-                data-toggle="collapse"
-                data-target="#collapseTwo"
-                aria-expanded="true"
-                aria-controls="collapseTwo"
-              >
-                ۲.آماده سازی داده ها
-              </button>
-            </h1>
-          </div>
+        <div className="accordion-item">
+          <h1 className="accordion-header" id="headingTwo">
+            <button
+              className="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseTwo"
+              aria-expanded="false"
+              aria-controls="collapseTwo"
+            >
+              ۲.آماده سازی داده ها
+            </button>
+          </h1>
 
           <div
             id="collapseTwo"
-            className="collapse show"
+            className="accordion-collapse collapse"
             aria-labelledby="headingTwo"
-            data-parent="#accordion"
+            data-bs-parent="#accordion"
           >
             <DataPreparation />
           </div>
         </div>
 
-        <div className="card">
-          <div className="card-header" id="headingThree">
-            <h1 className="mb-0 text-right">
-              <button
-                className="btn btn-link"
-                data-toggle="collapse"
-                data-target="#collapseTwo"
-                aria-expanded="true"
-                aria-controls="collapseTwo"
-              >
-                ۳. آموزش داده ها
-              </button>
-            </h1>
-          </div>
+        <div className="accordion-item">
+          <h1 className="accordion-header" id="headingThree">
+            <button
+              className="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseThree"
+              aria-expanded="false"
+              aria-controls="collapseThree"
+            >
+              ۳. آموزش داده ها
+            </button>
+          </h1>
 
           <div
-            id="collapseTwo"
-            className="collapse show"
-            aria-labelledby="headingTwo"
-            data-parent="#accordion"
+            id="collapseThree"
+            className="accordion-collapse collapse"
+            aria-labelledby="headingThree"
+            data-bs-parent="#accordion"
           >
             <DataTraining />
           </div>
         </div>
 
-        <div className="card">
-          <div className="card-header" id="headingThree">
-            <h1 className="mb-0 text-right">
-              <button
-                className="btn btn-link"
-                data-toggle="collapse"
-                data-target="#collapseTwo"
-                aria-expanded="true"
-                aria-controls="collapseTwo"
-              >
-                ۴. تست داده ها
-              </button>
-            </h1>
-          </div>
+        <div className="accordion-item">
+          <h1 className="accordion-header" id="headingFour">
+            <button
+              className="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseFour"
+              aria-expanded="false"
+              aria-controls="collapseFour"
+            >
+              ۴. تست داده ها
+            </button>
+          </h1>
 
           <div
-            id="collapseTwo"
-            className="collapse show"
-            aria-labelledby="headingTwo"
-            data-parent="#accordion"
+            id="collapseFour"
+            className="accordion-collapse collapse"
+            aria-labelledby="headingFour"
+            data-bs-parent="#accordion"
           >
             <DataTesting />
           </div>

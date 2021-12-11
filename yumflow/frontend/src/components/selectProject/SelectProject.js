@@ -41,7 +41,7 @@ function SelectProject() {
     projects.map((flow) => (
       <div className="row" key={flow.id}>
         <div
-          className="card m-3 text-right col"
+          className="card m-3 text-center col my-card clickable"
           onClick={() => onFlowClicked(flow)}
         >
           <div className="card-body">
@@ -67,10 +67,13 @@ function SelectProject() {
       description: document.getElementById("descriptionFlowForm").value,
     };
     ActionCreateFlow(data)
-      .then((data) => data.json())
       .then((data) => {
         console.log(data);
-        if (data.message) throw new Error(data.message);
+        return data.json();
+      })
+      .then((data) => {
+        // console.log(data);
+        if (data.title) throw new Error(data.title[0]);
         setProjects([...projects, data]);
       })
       .catch((error) => {
@@ -81,7 +84,7 @@ function SelectProject() {
 
   const newFlowDiv = (
     <div className="row">
-      <div className="card m-3 col">
+      <div className="card m-3 col my-card">
         <div className="card-body text-center">
           <h5 className="card-title">
             {" "}
@@ -110,7 +113,7 @@ function SelectProject() {
                 نوشتن توضیحات اختیاری است.
               </small>
             </div>
-            <button className="btn btn-primary">Submit</button>
+            <button className="btn btn-primary">تایید</button>
           </form>
         </div>
       </div>

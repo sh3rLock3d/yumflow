@@ -73,6 +73,14 @@ function ActionTestData(id, data) {
   });
 }
 
+function ActionGetAllFlowModels(id) {
+  const url = `${URL}flows/${id}/get_all_flow_models/`;
+  return fetch(url, {
+    method: "GET",
+    headers: tokenConfigForm().headers,
+  });
+}
+
 export {
   ActionGetAllFlows,
   ActionCreateFlow,
@@ -83,4 +91,5 @@ export {
   ActionPrepareData,
   ActionTrainData,
   ActionTestData,
+  ActionGetAllFlowModels,
 };
