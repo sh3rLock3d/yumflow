@@ -21,6 +21,19 @@ button {
   margin: 5px 0;
 }
 
+.MuiSelect-select,
+input {
+  background-color: azure !important;
+}
+
+.my-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-evenly;
+  margin-bottom: 10px;
+}
+
 .welcome-message {
   direction: ltr;
   display: flex;

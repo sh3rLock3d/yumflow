@@ -8,6 +8,7 @@ import { Context } from "../../../Store";
 import { SET_FLOW } from "../../actions/types";
 import Table from "../../layout/Table";
 import Snackbar from "../../common/MySnackbar";
+import { FormGroup, FormControlLabel, Button, Checkbox } from "@mui/material";
 
 function InsertData({ id }) {
   const [state, dispatch] = useContext(Context);
@@ -19,7 +20,7 @@ function InsertData({ id }) {
     const data = new FormData();
     data.append(
       "trainData",
-      document.getElementById("formFile_TrainData").files[0]
+      document.getElementById("insert-data-file-input").files[0]
     );
     data.append(
       "addTimeCol",
@@ -41,42 +42,38 @@ function InsertData({ id }) {
 
   const form = (
     <form>
-      <div className="form-group text-right">
-        <label htmlFor="formFile_TrainData">
-          داده های خود را به صورت CSV در این جا آپلود کنید
+      <FormGroup style={{ alignItems: "center" }}>
+        <input accept=".csv" hidden id="insert-data-file-input" type="file" />
+        <label>لطفا فایل داده‌های خود را به صورت csv آپلود کنید</label>
+        <label htmlFor="insert-data-file-input">
+          <Button variant="contained" component="span">
+            آپلود
+          </Button>
         </label>
-        <input
-          type="file"
-          className="form-control-file"
-          id="formFile_TrainData"
+
+        <FormControlLabel
+          control={<Checkbox color="secondary" id="formTimeCol_TrainData" />}
+          label="اضافه کردن ستون زمان به داده‌ها"
         />
 
-        <div className="form-check" dir="ltr">
-          <input
-            className="form-check-input"
-            type="checkbox"
-            value=""
-            id="formTimeCol_TrainData"
-          />
-          <label className="form-check-label" htmlFor="formTimeCol_TrainData">
-            ایجاد ستون زمان به داده ها
-          </label>
-        </div>
+        <br />
 
-        <button
-          type="button"
-          className="btn btn-primary"
+        <Button
+          variant="contained"
+          color="success"
+          style={{ width: "100%", maxWidth: "300px" }}
           onClick={InsertDataReq}
         >
           ارسال
-        </button>
-        <Snackbar
-          open={!!error}
-          onClose={() => setError("")}
-          message={error}
-          variant="error"
-        />
-      </div>
+        </Button>
+      </FormGroup>
+
+      <Snackbar
+        open={!!error}
+        onClose={() => setError("")}
+        message={error}
+        variant="error"
+      />
     </form>
   );
 
@@ -115,46 +112,43 @@ function AppendData({ id }) {
 
   const form = (
     <form>
-      <div className="form-group text-center">
-        <label htmlFor="formFile_TrainDataAppend">
-          برای اضافه کردن به داده های قبلی می توانید داده های جدید را در این
-          مکان اضافه کنید.
+      <FormGroup style={{ alignItems: "center" }}>
+        <input accept=".csv" hidden id="formFile_TrainDataAppend" type="file" />
+        <label>
+          اضافه کردن داده‌های جدید به داده‌های قبلی (در صورتی که قبلا داده‌ای
+          ارسال شده باشد)
         </label>
-        <input
-          type="file"
-          className="form-control-file"
-          id="formFile_TrainDataAppend"
+        <label htmlFor="formFile_TrainDataAppend">
+          <Button variant="contained" component="span">
+            آپلود
+          </Button>
+        </label>
+
+        <FormControlLabel
+          control={
+            <Checkbox color="secondary" id="formTimeCol_TrainDataAppend" />
+          }
+          label="اضافه کردن ستون زمان به داده‌ها"
         />
 
-        <div className="form-check" dir="ltr">
-          <input
-            className="form-check-input"
-            type="checkbox"
-            value=""
-            id="formTimeCol_TrainDataAppend"
-          />
-          <label
-            className="form-check-label"
-            htmlFor="formTimeCol_TrainDataAppend"
-          >
-            ایجاد ستون زمان به داده ها
-          </label>
-        </div>
+        <br />
 
-        <button
-          type="button"
-          className="btn btn-primary"
+        <Button
+          variant="contained"
+          color="success"
+          style={{ width: "100%", maxWidth: "300px" }}
           onClick={InsertDataReq}
         >
           ارسال
-        </button>
-        <Snackbar
-          open={!!error}
-          onClose={() => setError("")}
-          message={error}
-          variant="error"
-        />
-      </div>
+        </Button>
+      </FormGroup>
+
+      <Snackbar
+        open={!!error}
+        onClose={() => setError("")}
+        message={error}
+        variant="error"
+      />
     </form>
   );
 
@@ -165,7 +159,7 @@ function ShowData({ id }) {
   const [state, dispatch] = useContext(Context);
   const flow = state["auth"]["flow"];
 
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
 
   const [chart, setCart] = useState({ state: "hidden", data: null });
 
@@ -191,24 +185,29 @@ function ShowData({ id }) {
   };
 
   const notShow = (
-    <button type="button" onClick={showData} className="btn btn-primary">
-      مشاهده ی جدول
-    </button>
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <Button onClick={showData} variant="contained" style={{ margin: 5 }}>
+        مشاهده‌ی جدول
+      </Button>
+    </div>
   );
 
   const show = (
     <>
-      <button type="button pl-5" onClick={showData} className="btn btn-primary">
-        <i class="bi bi-arrow-repeat"></i>
-      </button>
-      <button type="button" onClick={hideData} className="btn btn-primary">
-        مخفی کردن جدول
-      </button>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <Button onClick={showData} variant="contained" style={{ margin: 5 }}>
+          <i class="bi bi-arrow-repeat"></i>
+        </Button>
+        <Button onClick={hideData} variant="contained" style={{ margin: 5 }}>
+          مخفی کردن جدول
+        </Button>
+      </div>
       <Table df={chart["data"]} />
+
       <Snackbar
         open={error}
-        onClose={() => setError(false)}
-        message="خطا در ورود!"
+        onClose={() => setError("")}
+        message={error}
         variant="error"
       />
     </>
@@ -224,9 +223,9 @@ function GatheringData() {
   return (
     <div className="container p-2">
       <InsertData id={flow.id} />
-
+      <hr />
       <AppendData id={flow.id} />
-
+      <hr />
       <ShowData id={flow.id} />
     </div>
   );

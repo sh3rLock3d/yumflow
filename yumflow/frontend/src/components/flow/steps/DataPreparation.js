@@ -2,6 +2,16 @@ import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../../../Store";
 import { ActionPrepareData } from "../../actions/Action";
 import Snackbar from "../../common/MySnackbar";
+import {
+  FormGroup,
+  FormControlLabel,
+  Button,
+  Radio,
+  RadioGroup,
+  Select,
+  MenuItem,
+} from "@mui/material";
+import TextField from "../../common/MyTextField";
 
 const ChooseRows = ({ Pconstraints }) => {
   const [state, dispatch] = useContext(Context);
@@ -26,13 +36,27 @@ const ChooseRows = ({ Pconstraints }) => {
   };
 
   const AndConditions = constraints["and"].map((c, i) => (
-    <div key={i} className="row align-items-center">
+    <div key={i} className="my-row" style={{ alignItems: "center" }}>
       <div className="m-1">
-        <button type="button p-5 m-1" className="btn btn-info" dir="ltr">
+        <button
+          type="button p-5 m-1"
+          onClick={(e) => {
+            e.preventDefault();
+          }}
+          className="btn btn-info"
+          dir="ltr"
+        >
           {c[0]}
         </button>
         {c[1] ? (
-          <button type="button p-5 m-1" className="btn btn-info" dir="ltr">
+          <button
+            type="button p-5 m-1"
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+            className="btn btn-info"
+            dir="ltr"
+          >
             ~
           </button>
         ) : (
@@ -42,10 +66,24 @@ const ChooseRows = ({ Pconstraints }) => {
       <i className="bi bi-arrow-left-short"></i>
       {c[2].map((c, i) => (
         <div key={i}>
-          <button type="button p-5 m-1" className="btn btn-success" dir="ltr">
+          <button
+            type="button p-5 m-1"
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+            className="btn btn-success"
+            dir="ltr"
+          >
             {c[0]} {c[1]}
           </button>
-          <button type="button p-5 m-1" className="btn btn-warning" dir="ltr">
+          <button
+            type="button p-5 m-1"
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+            className="btn btn-warning"
+            dir="ltr"
+          >
             |
           </button>
         </div>
@@ -70,93 +108,89 @@ const ChooseRows = ({ Pconstraints }) => {
   };
   const notSavedOrs = constraints["or"].map((c, i) => (
     <div key={i}>
-      <button type="button p-5 m-1" className="btn btn-success" dir="ltr">
+      <button
+        type="button p-5 m-1"
+        onClick={(e) => {
+          e.preventDefault();
+        }}
+        className="btn btn-success"
+        dir="ltr"
+      >
         {c[0]} {c[1]}
       </button>
-      <button type="button p-5 m-1" className="btn btn-warning" dir="ltr">
+      <button
+        type="button p-5 m-1"
+        onClick={(e) => {
+          e.preventDefault();
+        }}
+        className="btn btn-warning"
+        dir="ltr"
+      >
         |
       </button>
     </div>
   ));
 
   return (
-    <div className="container p-2 shadow-sm text-right">
+    <div className="container p-2 text-center">
       <h5>آماده‌سازی سطرها</h5>
       <p>در این قسمت شرط‌هایی که برای انتخاب یک سطر لازم است را وارد کنید</p>
-      <div className="container">
-        <div className="row align-items-center">
-          <div className="col-auto">
-            <div className="row">
-              <div className="col-7">
-                <input
-                  className="form-control"
-                  id="chooseRowCol"
-                  name="chooseRowCol"
-                  type="text"
-                  placeholder="نام ستون"
-                />
-              </div>
-              <div className="col-5">
-                <select
-                  className="custom-select mr-sm-2"
-                  id="chooseRowColFormCustomSelect"
-                >
-                  <option defaultValue="0"></option>
-                  <option value="1">~</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <i className="bi bi-arrow-left-short"></i>
-          {notSavedOrs}
-          <div className="col-auto ">
-            <div className="row">
-              <select
-                className="custom-select mr-sm-2"
-                id="ChooseRowsLogicCondition"
-                dir="ltr"
-              >
-                <option defaultValue="=="> == </option>
-                <option value="<"> &gt; </option>
-                <option value="!="> != </option>
-                <option value=">"> &lt;</option>
-                <option value="isin"> is in</option>
-                <option value="~isin"> ~is in</option>
-              </select>
-            </div>
-          </div>
-          <div className="col-auto my-1" dir="ltr">
-            <input
-              className="form-control"
-              type="text"
-              id="ChooseRowsvalueCondition"
-              placeholder="'ali', 'hassan', 12.5"
-            />
-          </div>
-          <div className="col-auto" dir="ltr">
-            <span className="m-1">
-              <button
-                type="button p-5 m-1"
-                onClick={addConditionAnd}
-                className="btn btn-primary"
-              >
-                <i className="bi bi-plus-square"></i>
-              </button>
-            </span>
-            <span className="m-1">
-              <button
-                type="button p-5 m-1"
-                onClick={addConditionOr}
-                className="btn btn-primary"
-              >
-                or
-              </button>
-            </span>
-          </div>
-        </div>
-        <div className="row align-items-center">
-          <div className="container">{AndConditions}</div>
-        </div>
+
+      <div className="my-row">
+        <TextField id="chooseRowCol" label="نام ستون" />
+
+        <Select
+          style={{ width: 100 }}
+          variant="standard"
+          id="chooseRowColFormCustomSelect"
+          defaultValue={0}
+        >
+          <MenuItem value={0}>شرط</MenuItem>
+          <MenuItem value={1}>نقیض شرط</MenuItem>
+        </Select>
+        <i className="bi bi-arrow-left-short"></i>
+        <Select
+          style={{ width: 100 }}
+          variant="standard"
+          id="ChooseRowsLogicCondition"
+          defaultValue={"=="}
+        >
+          <MenuItem value={"=="}>==</MenuItem>
+          <MenuItem value={"<"}> != </MenuItem>
+          <MenuItem value={"!="}> &gt; </MenuItem>
+          <MenuItem value={">"}> &lt; </MenuItem>
+          <MenuItem value={"isin"}> is in </MenuItem>
+          <MenuItem value={"~isin"}> is not in </MenuItem>
+        </Select>
+
+        <TextField
+          id="ChooseRowsvalueCondition"
+          label="مقدار"
+          placeholder="'ali', 'hassan', 12.5"
+        />
+      </div>
+      {notSavedOrs}
+      <div className="my-row justify-content-center">
+        <Button
+          style={{ margin: 5 }}
+          variant="contained"
+          color="primary"
+          onClick={addConditionAnd}
+        >
+          <i className="bi bi-plus-square"></i>
+        </Button>
+        <Button
+          style={{ margin: 5 }}
+          variant="contained"
+          color="primary"
+          onClick={addConditionOr}
+        >
+          or
+        </Button>
+      </div>
+
+      <div className="row align-items-center">
+        <div className="container">{AndConditions}</div>
       </div>
     </div>
   );
@@ -188,7 +222,7 @@ const ChooseCols = ({ Pcols }) => {
   const onkeyupCol = (e) => {
     if (e.keyCode === 13) {
       let k = `columninput${Object.keys(inputCols).length + 1}`;
-      let v = event.target.value;
+      let v = e.target.value;
       setInputCols({
         ...inputCols,
         [k]: v,
@@ -214,50 +248,48 @@ const ChooseCols = ({ Pcols }) => {
   };
 
   return (
-    <div className="container p-2 shadow-sm text-right">
+    <div className="container p-2 text-center">
       <h5>آماده‌سازی ستون‌ها</h5>
 
-      <div className="form-check" dir="ltr">
-        <input
-          className="form-check-input"
-          type="radio"
-          name="radioChooseCol"
-          id="radioChooseCol1"
+      <RadioGroup>
+        <FormControlLabel
           value="option1"
-          onChange={oncheckColChanged}
-          defaultChecked={statCols == 1}
+          control={
+            <Radio
+              name="radioChooseCol"
+              id="radioChooseCol1"
+              onChange={oncheckColChanged}
+              checked={statCols === 1}
+            />
+          }
+          label="انتخاب تمام ستون‌ها"
         />
-        <label className="form-check-label" htmlFor="radioChooseCol1">
-          انتخاب تمام ستون‌ها
-        </label>
-      </div>
-      <div className="form-check" dir="ltr">
-        <input
-          className="form-check-input"
-          type="radio"
-          name="radioChooseCol"
-          id="radioChooseCol2"
+
+        <FormControlLabel
           value="option2"
-          onChange={oncheckColChanged}
+          control={
+            <Radio
+              name="radioChooseCol"
+              id="radioChooseCol2"
+              onChange={oncheckColChanged}
+            />
+          }
+          label="حذف ستون‌های انتخابی"
         />
-        <label className="form-check-label" htmlFor="radioChooseCol2">
-          حذف ستون‌های انتخابی
-        </label>
-      </div>
-      <div className="form-check disabled" dir="ltr">
-        <input
-          className="form-check-input"
-          type="radio"
-          name="radioChooseCol"
-          id="radioChooseCol3"
+
+        <FormControlLabel
           value="option3"
-          onChange={oncheckColChanged}
+          control={
+            <Radio
+              name="radioChooseCol"
+              id="radioChooseCol3"
+              onChange={oncheckColChanged}
+            />
+          }
+          label="انتخاب ستون‌ها"
         />
-        <label className="form-check-label" htmlFor="radioChooseCol3">
-          انتخاب ستون‌ها
-        </label>
-      </div>
-      <div style={{ display: statCols == 1 ? "none" : "block" }}>
+      </RadioGroup>
+      <div style={{ display: statCols === 1 ? "none" : "block" }}>
         {inputColDiv}
         <div className="row justify-center">
           <div className="col-3" id="column_inputs">
@@ -311,34 +343,35 @@ function DataPreparation() {
   };
 
   return (
-    <>
-      <div className="row justify-center">
-        <div className="col-6" id="column_inputs">
-          <input
-            className="form-control"
-            id="constraints-name"
-            name="constraints-name"
-            type="text"
-            placeholder="لطفا یک نام برای شروط خود وارد کنید"
-          />
-        </div>
-      </div>
-      <ChooseCols Pcols={Pcols} />
-      <ChooseRows Pconstraints={Pconstraints} />
-      <div className="container p-2 shadow-sm text-right">
-        <div className="row" dir="ltr">
-          <button type="button" className="btn btn-primary" onClick={sendInfo}>
-            ارسال اطلاعات
-          </button>
-        </div>
-      </div>
+    <form className="container p-2">
+      <FormGroup style={{ alignItems: "center" }}>
+        <TextField id="constraints-name" label="نام مدل" />
+      </FormGroup>
+      <hr />
+      <FormGroup style={{ alignItems: "center" }}>
+        <ChooseCols Pcols={Pcols} />
+      </FormGroup>
+      <hr />
+      <FormGroup style={{ alignItems: "center" }}>
+        <ChooseRows Pconstraints={Pconstraints} />
+      </FormGroup>
+      <FormGroup style={{ alignItems: "center" }}>
+        <Button
+          variant="contained"
+          color="success"
+          style={{ width: "100%", maxWidth: "300px" }}
+          onClick={sendInfo}
+        >
+          ارسال اطلاعات
+        </Button>
+      </FormGroup>
       <Snackbar
         open={!!error}
         onClose={() => setError("")}
         message={error}
         variant="error"
       />
-    </>
+    </form>
   );
 }
 

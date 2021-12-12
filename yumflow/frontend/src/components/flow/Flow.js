@@ -47,7 +47,7 @@ const Flow = () => {
               aria-expanded="true"
               aria-controls="collapseOne"
             >
-              ۱.جمع آوری داده ها
+              ۱.جمع‌آوری داده‌ها
             </button>
           </h1>
 
@@ -71,7 +71,7 @@ const Flow = () => {
               aria-expanded="false"
               aria-controls="collapseTwo"
             >
-              ۲.آماده سازی داده ها
+              ۲.آماده‌سازی داده‌ها
             </button>
           </h1>
 
@@ -95,7 +95,7 @@ const Flow = () => {
               aria-expanded="false"
               aria-controls="collapseThree"
             >
-              ۳. آموزش داده ها
+              ۳. آموزش داده‌ها
             </button>
           </h1>
 
@@ -119,7 +119,7 @@ const Flow = () => {
               aria-expanded="false"
               aria-controls="collapseFour"
             >
-              ۴. تست داده ها
+              ۴. تست داده‌ها
             </button>
           </h1>
 

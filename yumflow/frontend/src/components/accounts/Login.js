@@ -1,10 +1,11 @@
-import React, { useEffect, useContext, useState } from "react";
-import { Link, Redirect } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import { Context } from "../../Store";
 import { login } from "../actions/ActionAuth";
 import { LOGIN_SUCCESS } from "../actions/types";
 import { useHistory } from "react-router-dom";
 import Snackbar from "../common/MySnackbar";
+import TextField from "../common/MyTextField";
 
 function Login() {
   /*
@@ -42,25 +43,16 @@ function Login() {
     <div className="col-md-6 m-auto">
       <div className="card card-body mt-5 my-card">
         <h2 className="text-center">ورود</h2>
-        <hr />
         <form onSubmit={onSubmit}>
-          <div className="form-group text-center">
-            <label>نام کاربری</label>
-            <input
-              type="text"
-              id="LoginUsernameInput"
-              className="form-control"
-              name="username"
-            />
+          <div className="text-center m-2s">
+            <TextField id="LoginUsernameInput" label="نام کاربری" />
           </div>
 
-          <div className="form-group text-center">
-            <label>رمز عبور</label>
-            <input
-              type="password"
+          <div className="text-center m-2">
+            <TextField
               id="LoginPasswordInput"
-              className="form-control"
-              name="password"
+              label="رمز عبور"
+              type="password"
             />
           </div>
 

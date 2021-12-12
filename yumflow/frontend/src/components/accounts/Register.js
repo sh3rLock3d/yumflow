@@ -5,6 +5,7 @@ import { register } from "../actions/ActionAuth";
 import { REGISTER_SUCCESS } from "../actions/types";
 import { useHistory } from "react-router-dom";
 import Snackbar from "../common/MySnackbar";
+import TextField from "../common/MyTextField";
 
 const Register = () => {
   const [state, dispatch] = useContext(Context);
@@ -46,44 +47,36 @@ const Register = () => {
     <div className="col-md-6 m-auto">
       <div className="card card-body mt-5 my-card">
         <h2 className="text-center">ثبت نام</h2>
-        <hr />
         <form onSubmit={onSubmit}>
-          <div className="form-group text-center">
-            <label>نام کاربری</label>
-            <input
-              type="text"
-              className="form-control"
-              name="username"
-              id="formRegisterusername"
-            />
+          <div className="text-center m-2">
+            <TextField id="formRegisterusername" label="نام کاربری" />
           </div>
-          <div className="form-group text-center">
-            <label>پست الکترونیک</label>
-            <input
-              type="email"
-              className="form-control"
-              name="email"
+
+          <div className="text-center m-2">
+            <TextField
               id="formRegisterEmail"
+              label="پست الکترونیک"
+              type="email"
+              dir="ltr"
             />
           </div>
-          <div className="form-group text-center">
-            <label>رمز عبور</label>
-            <input
-              type="password"
-              className="form-control"
-              name="password"
+
+          <div className="text-center m-2">
+            <TextField
               id="formRegisterpass1"
-            />
-          </div>
-          <div className="form-group text-center">
-            <label>تکرار رمز عبور</label>
-            <input
+              label="رمز عبور"
               type="password"
-              className="form-control"
-              name="password2"
-              id="formRegisterpass2"
             />
           </div>
+
+          <div className="text-center m-2">
+            <TextField
+              id="formRegisterpass2"
+              label="تکرار رمز عبور"
+              type="password"
+            />
+          </div>
+
           <div className="form-group text-center">
             <button type="submit" className="btn btn-primary">
               ثبت نام
@@ -94,6 +87,7 @@ const Register = () => {
           </p>
         </form>
       </div>
+
       <Snackbar
         open={!!error}
         onClose={() => setError("")}
