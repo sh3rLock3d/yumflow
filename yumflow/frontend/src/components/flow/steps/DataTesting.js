@@ -2,7 +2,14 @@ import React, { useState, useContext } from "react";
 import { ActionTestData, ActionGetAllFlowModels } from "../../actions/Action";
 import { Context } from "../../../Store";
 import Snackbar from "../../common/MySnackbar";
-import { FormGroup, Button, Select, MenuItem } from "@mui/material";
+import {
+  FormGroup,
+  Button,
+  Select,
+  MenuItem,
+  TextField,
+  Autocomplete,
+} from "@mui/material";
 
 const DataTesting = () => {
   const [state, dispatch] = useContext(Context);
@@ -47,7 +54,19 @@ const DataTesting = () => {
     <form>
       <FormGroup className="container p-2" style={{ alignItems: "center" }}>
         <div className="my-row">
-          <Select
+          <Autocomplete
+            style={{ backgroundColor: "azure" }}
+            disablePortal
+            id="test-flow-models-select"
+            options={flowModels}
+            getOptionLabel={(option) => option.name}
+            sx={{ width: 300 }}
+            renderInput={(params) => (
+              <TextField {...params} variant="standard" fullWidth />
+            )}
+          />
+
+          {/* <Select
             style={{ width: 100 }}
             variant="standard"
             id="test-flow-models-select"
@@ -58,7 +77,7 @@ const DataTesting = () => {
                   {model.name}
                 </MenuItem>
               ))}
-          </Select>
+          </Select> */}
         </div>
 
         <input accept=".csv" hidden id="formFile_TestData" type="file" />
