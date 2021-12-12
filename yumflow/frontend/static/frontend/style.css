@@ -1,0 +1,87 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  height: 100vh;
+  background-image: url("https://www.datamation.com/wp-content/uploads/2021/10/DRL-ICA-91521-scaled.jpeg");
+  background-repeat: repeat-y;
+  background-size: cover;
+  background-position-y: 142px;
+}
+
+li {
+  text-align: center;
+}
+
+input,
+button {
+  text-align: center !important;
+  margin: 5px 0;
+}
+
+.MuiSelect-select,
+input {
+  background-color: azure !important;
+}
+
+.my-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-evenly;
+  margin-bottom: 10px;
+}
+
+.welcome-message {
+  direction: ltr;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 20px 0 20px 0;
+  color: greenyellow;
+  background-color: black;
+}
+
+.my-card {
+  align-items: center;
+  background-color: cyan;
+}
+
+.my-form-group {
+  text-align: center;
+}
+
+.clickable {
+  cursor: pointer;
+  transition: ease 0.5s;
+}
+
+.clickable:hover {
+  box-shadow: 5px 10px 10px darkred;
+}
+
+.accordion {
+  /* background-color: blue; */
+  border-radius: 16px;
+}
+
+.accordion-item {
+  background-color: cyan;
+  border-radius: 16px !important;
+  border: none;
+  margin: 5px 0;
+}
+
+.accordion-button {
+  background-color: teal !important;
+  color: azure !important;
+  border-radius: 16px !important;
+  justify-content: space-between;
+}
+
+.accordion-button::after {
+  margin-left: 0;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='azure'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
+}

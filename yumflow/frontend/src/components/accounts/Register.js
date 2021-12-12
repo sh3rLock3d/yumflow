@@ -1,95 +1,107 @@
-import React, { useEffect, useContext } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { Context } from '../../Store'
-import { register } from '../actions/ActionAuth'
-import {REGISTER_SUCCESS} from '../actions/types'
-
-
+import React, { useEffect, useContext, useState } from "react";
+import { Link, Redirect } from "react-router-dom";
+import { Context } from "../../Store";
+import { register } from "../actions/ActionAuth";
+import { REGISTER_SUCCESS } from "../actions/types";
+import { useHistory } from "react-router-dom";
+import Snackbar from "../common/MySnackbar";
+import TextField from "../common/MyTextField";
 
 const Register = () => {
   const [state, dispatch] = useContext(Context);
+  const [error, setError] = useState("");
+  const [passwordsDontMatch, setPasswordsDontMatch] = useState("");
+  const history = useHistory();
 
   const onSubmit = (e) => {
-    console.log('hello');
+    console.log("hello");
     e.preventDefault();
-    let username = document.getElementById('formRegisterusername').value
-    let email = document.getElementById('formRegisterEmail').value
-    let password = document.getElementById('formRegisterpass1').value
-    let password2 = document.getElementById('formRegisterpass2').value
+    let username = document.getElementById("formRegisterusername").value;
+    let email = document.getElementById("formRegisterEmail").value;
+    let password = document.getElementById("formRegisterpass1").value;
+    let password2 = document.getElementById("formRegisterpass2").value;
     if (password !== password2) {
-      console.log('error Passwords do not match')
+      console.log("error Passwords do not match");
+      setPasswordsDontMatch("رمز عبور یکسان نیست!");
     } else {
       const newUser = {
         username,
         password,
         email,
-      }; 
+      };
       register(newUser)
-        .then(data => {
-          console.log("success" + data)
+        .then((data) => data.json())
+        .then((data) => {
+          console.log("success", data);
+          if (data.username) throw new Error(data.username[0]);
           dispatch({ type: REGISTER_SUCCESS, payload: data });
+          history.push("/");
         })
         .catch((error) => {
-          console.error('Error:', error);
+          setError(error.message);
         });
     }
   };
 
-
   return (
     <div className="col-md-6 m-auto">
-      <div className="card card-body mt-5">
-        <h2 className="text-center">Register</h2>
+      <div className="card card-body mt-5 my-card">
+        <h2 className="text-center">ثبت نام</h2>
         <form onSubmit={onSubmit}>
-          <div className="form-group">
-            <label>Username</label>
-            <input
-              type="text"
-              className="form-control"
-              name="username"
-              id="formRegisterusername"
-            />
+          <div className="text-center m-2">
+            <TextField id="formRegisterusername" label="نام کاربری" />
           </div>
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              className="form-control"
-              name="email"
+
+          <div className="text-center m-2">
+            <TextField
               id="formRegisterEmail"
+              label="پست الکترونیک"
+              type="email"
+              dir="ltr"
             />
           </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              className="form-control"
-              name="password"
+
+          <div className="text-center m-2">
+            <TextField
               id="formRegisterpass1"
-            />
-          </div>
-          <div className="form-group">
-            <label>Confirm Password</label>
-            <input
+              label="رمز عبور"
               type="password"
-              className="form-control"
-              name="password2"
-              id="formRegisterpass2"
             />
           </div>
-          <div className="form-group">
+
+          <div className="text-center m-2">
+            <TextField
+              id="formRegisterpass2"
+              label="تکرار رمز عبور"
+              type="password"
+            />
+          </div>
+
+          <div className="form-group text-center">
             <button type="submit" className="btn btn-primary">
-              Register
+              ثبت نام
             </button>
           </div>
-          <p>
-            Already have an account? <Link to="/login">Login</Link>
+          <p className="text-center">
+            حساب کاربری دارید؟ <Link to="/login">ورود</Link>
           </p>
         </form>
       </div>
+
+      <Snackbar
+        open={!!error}
+        onClose={() => setError("")}
+        message={error}
+        variant="error"
+      />
+      <Snackbar
+        open={!!passwordsDontMatch}
+        onClose={() => setPasswordsDontMatch("")}
+        message={passwordsDontMatch}
+        variant="error"
+      />
     </div>
   );
-}
-
+};
 
 export default Register;

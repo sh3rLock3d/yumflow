@@ -9,38 +9,24 @@ export const login = (username, password) => {
     const data = { username, password }
 
     let link = URL + "auth/login"
-    let res = fetch(link, {
+    return fetch(link, {
         method: 'POST', // or 'PUT'
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
-    }).then(response => {
-        if (response.status != 200) {
-            throw new Error(response.json())
-        }
-        return response.json()
     })
-    return res
-
 };
 
 export const register = (data) => {
     let link = URL + "auth/register"
-    let res = fetch(link, {
+    return fetch(link, {
         method: 'POST', // or 'PUT'
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
-    }).then(response => {
-        if (response.status != 200) {
-            throw new Error(response.json())
-        }
-        return response.json()
     })
-    return res
-
 };
 
 export const loadUser = () => {
@@ -64,21 +50,25 @@ export const loadUser = () => {
 }
 
 export const logout = (dispatch) => {
-    let link = '/api/auth/logout/'
-    let res = fetch(link, {
-        method: 'POST',
-        headers: tokenConfig().headers,
+    return new Promise((resolve, reject) => {
+        let link = '/api/auth/logout/'
+        fetch(link, {
+            method: 'POST',
+            headers: tokenConfig().headers,
+        })
+            .then(data=>{
+                if(200 <= data.status < 300) {
+                    dispatch({type: LOGOUT_SUCCESS, payload: data});
+                    resolve()
+                } else {
+                    throw new Error('error')
+                }
+            })
+            .catch(err =>{
+                console.log(err);
+                reject()
+            })
     })
-        .then(data=>{
-            if(200 <= data.status < 300) {
-                dispatch({type: LOGOUT_SUCCESS, payload: data});
-            } else {
-                throw new Error('error')
-            }
-        })
-        .catch(err =>{
-            console.log(err);
-        })
 }
 
 
@@ -108,9 +98,7 @@ export const tokenConfigForm = () => {
 
     // Headers
     const config = {
-        headers: {
-
-        },
+        headers: {},
     };
 
     // If token, add to headers config
