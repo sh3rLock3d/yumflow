@@ -133,6 +133,7 @@ const Flow = () => {
           </div>
         </div>
       </div>
+
       <Snackbar
         open={!!error}
         onClose={() => setError("")}

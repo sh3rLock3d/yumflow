@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { Context } from "../../../Store";
 import { ActionTrainData, ActionGetAllFlowModels } from "../../actions/Action";
 import Snackbar from "../../common/MySnackbar";
+import { FormGroup, Button, Select, MenuItem } from "@mui/material";
 
 const DataTraining = () => {
   const [state, dispatch] = useContext(Context);
@@ -38,30 +39,34 @@ const DataTraining = () => {
 
   return (
     <>
-      <div className="container p-2 shadow-sm text-right">
-        <div className="row justify-center">
-          <div className="col-3" id="column_inputs">
-            <select
-              className="form-select"
-              name="flow-models-select"
-              id="flow-models-select"
-            >
-              {flowModels &&
-                flowModels.map((model) => (
-                  <option key={model.id} value={model.id}>
-                    {model.name}
-                  </option>
-                ))}
-            </select>
-          </div>
+      <div className="container p-2 text-center">
+        <div className="my-row">
+          <Select
+            style={{ width: 100 }}
+            variant="standard"
+            id="flow-models-select"
+          >
+            {flowModels &&
+              flowModels.map((model) => (
+                <MenuItem key={model.id} value={model.id}>
+                  {model.name}
+                </MenuItem>
+              ))}
+          </Select>
         </div>
       </div>
-      <div className="container p-2 shadow-sm text-right">
-        <div className="row" dir="ltr">
-          <button type="button" className="btn btn-primary" onClick={sendInfo}>
+      <div className="container p-2 text-center">
+        <FormGroup style={{ alignItems: "center" }}>
+          <Button
+            variant="contained"
+            color="success"
+            style={{ width: "100%", maxWidth: "300px" }}
+            onClick={sendInfo}
+          >
             ساخت مدل
-          </button>
-        </div>
+          </Button>
+        </FormGroup>
+
         <Snackbar
           open={!!error}
           onClose={() => setError("")}

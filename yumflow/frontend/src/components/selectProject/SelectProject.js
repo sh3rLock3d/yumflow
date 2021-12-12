@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { SET_FLOW } from "../actions/types";
 import { Context } from "../../Store";
 import Snackbar from "../common/MySnackbar";
+import TextField from "../common/MyTextField";
 
 // https://stackoverflow.com/questions/53219113/where-can-i-make-api-call-with-hooks-in-react
 function SelectProject() {
@@ -92,23 +93,13 @@ function SelectProject() {
           </h5>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="titleFlowForm">نام پروژه</label>
-              <input
-                type="text"
-                className="form-control"
-                id="titleFlowForm"
-                placeholder="عنوان پروژه را وارد کنید"
-              />
+              <TextField id="titleFlowForm" label="نام پروژه" />
             </div>
-            <div className="form-group">
-              <label htmlFor="descriptionFlowForm">توضیحات</label>
-              <input
-                type="text"
-                className="form-control"
-                id="descriptionFlowForm"
-                aria-describedby="descriptionHelp"
-                placeholder="توضیحات پروژه را وارد کنید"
-              />
+            <div
+              className="form-group"
+              style={{ display: "flex", flexDirection: "column" }}
+            >
+              <TextField id="descriptionFlowForm" label="توضیحات" />
               <small id="descriptionHelp" className="form-text text-muted">
                 نوشتن توضیحات اختیاری است.
               </small>
@@ -117,6 +108,7 @@ function SelectProject() {
           </form>
         </div>
       </div>
+
       <Snackbar
         open={!!error}
         onClose={() => setError("")}
