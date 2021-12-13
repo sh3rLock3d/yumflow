@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 
 class Flow(models.Model):
-    title = models.CharField(max_length=100, unique=True)
+    title = models.CharField(max_length=100,)
     description = models.CharField(max_length=500, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, related_name="flows", on_delete=models.CASCADE, null=True)

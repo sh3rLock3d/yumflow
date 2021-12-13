@@ -16,7 +16,8 @@ class FlowViewSet(viewsets.ModelViewSet):
         #permissions.AllowAny
     ]
     serializer_class = FlowSerializers
-
+        
+    
     def get_queryset(self):
         return self.request.user.flows.all()
 
@@ -46,10 +47,7 @@ class FlowViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def append_data(self, request, pk=None):
         flow = self.get_object()
-        
-        data =  request.FILES.get("trainData")
-        
-        
+        data =  request.FILES.get("trainData")    
         try:
             df2 = read_CSV_data(data.read(), request.data["addTimeCol"])
         except:
@@ -91,6 +89,12 @@ class FlowViewSet(viewsets.ModelViewSet):
     def prepare_data(self, request, pk=None):
         flow = self.get_object()
         # df = filter_data(request.data['cols'], request.data['colFilter'], request.data['constraints'], flow.data.data)
+        print(request.data['cols'])
+        print('---------------')
+        print(request.data['colFilter'])
+        print('---------')
+        print(request.data['constraints'])
+        print('---------')
         
         name = request.data['name']
 

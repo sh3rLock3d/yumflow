@@ -2,6 +2,7 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from knox.models import AuthToken
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
+from rest_framework import status
 
 # Register API
 class RegisterAPI(generics.GenericAPIView):
@@ -9,7 +10,17 @@ class RegisterAPI(generics.GenericAPIView):
 
   def post(self, request, *args, **kwargs):
     serializer = self.get_serializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
+    if not serializer.is_valid():
+      key, value = serializer.errors.popitem()
+      if key == 'password':
+        key = "رمز عبور: "
+      elif key == 'username':
+        key = 'نام کاربری: '
+      elif key == 'email':
+        key = 'ایمیل: '
+      content = {'message': key+value[0]}
+      return Response(content, status=status.HTTP_400_BAD_REQUEST)
+    # serializer.is_valid(raise_exception=True)
     user = serializer.save()
     return Response({
       "user": UserSerializer(user, context=self.get_serializer_context()).data,
@@ -22,7 +33,17 @@ class LoginAPI(generics.GenericAPIView):
 
   def post(self, request, *args, **kwargs):
     serializer = self.get_serializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
+    if not serializer.is_valid():
+      key, value = serializer.errors.popitem()
+      if key == 'password':
+        key = "رمز عبور: "
+      elif key == 'username':
+        key = 'نام کاربری: '
+      elif key == 'email':
+        key = 'ایمیل: '
+      content = {'message': key+value[0]}
+      return Response(content, status=status.HTTP_400_BAD_REQUEST)
+    #serializer.is_valid(raise_exception=True)
     user = serializer.validated_data
     _, token = AuthToken.objects.create(user)
     return Response({
