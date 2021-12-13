@@ -27,7 +27,26 @@ def append_data(df1, df2):
 
 
 def show_digest_of_data(x):
-    return x.head(5)
+    shape = x.shape
+    header = list(x.columns)
+    if len(header) >= 10:
+        header = header[:5] + ['...'] + header[-5:]
+    index = list(x.index.values) 
+    if len(header) >= 10:
+        index = index[:5] + ['...'] + index[-5:]
+    data = []
+    for c in header:
+        temp = []
+        for r in index:
+            if c== '...' or r =='...':
+                temp.append('...')
+            else:
+                temp.append(x.at[r,c])
+        data.append(temp)
+    shape = x.shape
+
+
+    return {'header':header, 'index':index, 'data':data, 'shape':shape}
 
 def create_query(constraints):
     query = []

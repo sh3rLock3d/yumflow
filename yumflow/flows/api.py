@@ -23,10 +23,9 @@ class FlowViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         for i in self.request.user.flows.all():
-            if i.title == request.data['title']:
+            if i.title == request.data.get('title'):
                 content = {'message': 'عنوان تکراری است'}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
-        
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             key, value = serializer.errors.popitem()
@@ -36,7 +35,6 @@ class FlowViewSet(viewsets.ModelViewSet):
                 key = 'توضیحات: '
             content = {'message': key+value[0]}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
-
         return super().create(request, *args, **kwargs)
 
     def perform_create(self, serializer):
@@ -95,10 +93,8 @@ class FlowViewSet(viewsets.ModelViewSet):
         if flow.data == None:
             content = {'message': 'داده ای ساخته نشده تا نمایش داده شود .'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
-
-        datas = {
-            'data':flow.data.info() if flow.data else None ,
-        }
+        
+        datas = show_digest_of_data(flow.data.data)
         return Response(datas)
 
     
@@ -107,14 +103,8 @@ class FlowViewSet(viewsets.ModelViewSet):
     def prepare_data(self, request, pk=None):
         flow = self.get_object()
         # df = filter_data(request.data['cols'], request.data['colFilter'], request.data['constraints'], flow.data.data)
-        print(request.data['cols'])
-        print('---------------')
-        print(request.data['colFilter'])
-        print('---------')
-        print(request.data['constraints'])
-        print('---------')
         
-        name = request.data['name']
+        name = request.data.get('name')
 
         if request.data['name'] == None:
             content = {'message': 'برای مدل جدید داده ای انتخاب نشده است.'}
@@ -153,7 +143,7 @@ class FlowViewSet(viewsets.ModelViewSet):
                 "prepration_id":mor.preparation.id,
                 "modelOfTrain_id": mor.modelOfTrain.id if mor.modelOfTrain else None,
                 "testResult_id": mor.testResult.id if mor.testResult else None,
-                "score": mor.testResult.score if  mor.testResult else None,
+                "score": mor.testResult.score if  mor.testResult else -1,
             })
         return Response({'models': res})
 
@@ -162,7 +152,7 @@ class FlowViewSet(viewsets.ModelViewSet):
     def train_data(self, request, pk=None):
         flow = self.get_object()
         modelResult = None
-        id = request.data['id']
+        id = request.get('id')
         if id == None:
             content = {'message': 'داده های ورودی معتبر نیست'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
@@ -204,7 +194,7 @@ class FlowViewSet(viewsets.ModelViewSet):
         flow = self.get_object()
 
         modelResult = None
-        id = request.data['id']
+        id = request.data.get('id')
         if id == None:
             content = {'message': 'داده های ورودی معتبر نیست'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
@@ -217,8 +207,6 @@ class FlowViewSet(viewsets.ModelViewSet):
         if modelResult == None:
             content = {'message': 'چنین شناسه ای وجود ندارد'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
-
-
 
         m = modelResult.modelOfTrain.upload
         os.popen(f'cp {m.path} flows/MLTools/createModel/final_test/insta_trained_model.txt')
