@@ -21,6 +21,24 @@ class FlowViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return self.request.user.flows.all()
 
+    def create(self, request, *args, **kwargs):
+        for i in self.request.user.flows.all():
+            if i.title == request.data['title']:
+                content = {'message': 'عنوان تکراری است'}
+                return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            key, value = serializer.errors.popitem()
+            if key == 'title':
+                key = "عنوان: "
+            elif key == 'description':
+                key = 'توضیحات: '
+            content = {'message': key+value[0]}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+        return super().create(request, *args, **kwargs)
+
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 

@@ -8,6 +8,14 @@ class FlowSerializers(serializers.ModelSerializer):
     class Meta:
         model = Flow
         fields = '__all__'
+        '''
+        validators = [
+            UniqueTogetherValidator(
+                queryset=model.objects.all(),
+                fields=['owner', 'title'],
+            )
+        ]
+        '''
         
 
 class DataFrameSerializers(serializers.ModelSerializer):
