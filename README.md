@@ -1,4 +1,7 @@
 # yumflow
+
+A website for creating different models for training data with different methods and compare them. This website is being used by Dr.Mahdi Jafari Siavoshani's Lab.
+
 ## how to setup project
 ```
 mkdir project
