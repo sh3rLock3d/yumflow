@@ -7,13 +7,14 @@ import { useHistory } from "react-router-dom";
 import Snackbar from "../common/MySnackbar";
 import TextField from "../common/MyTextField";
 
-function Login() {
+function Login({ location }) {
   /*
     const state = {
         username: '',
         password: '',
     };
     */
+  const loc = location.state;
   const [state, dispatch] = useContext(Context);
   const [error, setError] = useState("");
 
@@ -29,9 +30,13 @@ function Login() {
       .then((data) => data.json())
       .then((data) => {
         console.log("success", data);
-        if (data.non_field_errors) throw new Error(data.non_field_errors[0]);
+        if (data.message) throw new Error(data.message);
         dispatch({ type: LOGIN_SUCCESS, payload: data });
-        history.push("/");
+        if (loc && loc.from) {
+          history.replace(loc.from);
+        } else {
+          history.replace("/");
+        }
       })
       .catch((error) => {
         console.log(error);

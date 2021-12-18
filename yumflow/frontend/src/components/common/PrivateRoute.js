@@ -9,7 +9,9 @@ const PrivateRoute = ({ component: Component, authed, callback, ...rest }) => {
         authed ? (
           <Component {...props} />
         ) : (
-          <Redirect to={{ pathname: callback }} />
+          <Redirect
+            to={{ pathname: callback, state: { from: props.location } }}
+          />
         )
       }
     />
