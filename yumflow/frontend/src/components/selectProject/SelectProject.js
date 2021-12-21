@@ -74,7 +74,7 @@ function SelectProject() {
       })
       .then((data) => {
         // console.log(data);
-        if (data.title) throw new Error(data.title[0]);
+        if (data.message) throw new Error(data.message);
         setProjects([...projects, data]);
       })
       .catch((error) => {
@@ -108,6 +108,13 @@ function SelectProject() {
           </form>
         </div>
       </div>
+    </div>
+  );
+
+  return (
+    <div className="container">
+      {listItems}
+      {newFlowDiv}
 
       <Snackbar
         open={!!error}
@@ -121,13 +128,6 @@ function SelectProject() {
         message={submitError}
         variant="error"
       />
-    </div>
-  );
-
-  return (
-    <div className="container">
-      {listItems}
-      {newFlowDiv}
     </div>
   );
 }

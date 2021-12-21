@@ -33,7 +33,7 @@ const Register = () => {
         .then((data) => data.json())
         .then((data) => {
           console.log("success", data);
-          if (data.username) throw new Error(data.username[0]);
+          if (data.message) throw new Error(data.message);
           dispatch({ type: REGISTER_SUCCESS, payload: data });
           history.push("/");
         })
