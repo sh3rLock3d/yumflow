@@ -22,7 +22,7 @@ def Create():
         test_data_folder=config_parameters['main']['test_data_folder']
 
     if change_train_data:
-            
+
         csvname_out_all=TCP_insta_parser_12.session_split_function(train_data_folder,"train")
         with open(os.path.join(home_address,"TCP_parser_train.txt"), 'w') as file_to_write:
             print(csvname_out_all,file=file_to_write)
@@ -64,7 +64,7 @@ def Create():
             #os.system(python_command+os.path.join(home_address,"insta_model.py")+" "+train_data_file_name+" "+test_data_file_name+" train")
         print('------------------',train_data_file_name)
         insta_model.model_train_exec(train_data_file_name)
-            
+
         # #final test models, always we have test
     result = []
     if has_test:
@@ -72,11 +72,37 @@ def Create():
         for index_temp in range(len(file_names)):
                 # print(index_temp,file_names[index_temp],predicted[index_temp])
             result.append([index_temp,file_names[index_temp],predicted[index_temp]])
-        return(result)
+        t1 = [ii for ii in range(len(file_names)) if (file_names[ii][0:2]!="xx")]
+        t2 = [ii for ii in range(len(file_names)) if (file_names[ii][0:2]!="xx") and (predicted[ii][0]=="Unknown")]
+        t3 = [ii for ii in range(len(file_names)) if (file_names[ii][0:2]!="xx") and (predicted[ii][0]=="Known")]
+        ######################################
+        t4 = [ii for ii in range(len(file_names)) if (file_names[ii][0:2]=="xx")]
+        t5 = [ii for ii in range(len(file_names)) if (file_names[ii][0:2]=="xx") and (predicted[ii][1] == file_names[ii]) and (predicted[ii][0]=="Known")]
+        t6 = [ii for ii in range(len(file_names)) if (file_names[ii][0:2]=="xx") and (predicted[ii][1] != file_names[ii]) and (predicted[ii][0]=="Known")]
+        t7 = [ii for ii in range(len(file_names)) if (file_names[ii][0:2]=="xx") and (predicted[ii][1] == file_names[ii]) and (predicted[ii][0]=="Unknown")]
+        t8 = [ii for ii in range(len(file_names)) if (file_names[ii][0:2]=="xx") and (predicted[ii][1] != file_names[ii]) and (predicted[ii][0]=="Unknown")]
 
-            
+        ##################################
+        print("all files:", len(file_names) )
+        print("########################################")
+        print("unknown files:", len(t1))
+
+        acc_unknown_pre = float(len(t2))/float((len(t1)))
+        print(acc_unknown_pre, "as accuracy of unknown prediction")
+        print("false unknown reported as known number = {}".format(len(t3)))
+        print("########################################")
+
+        print("known files:", len(t4))
+
+        know_pre_unknow = float(len(t7)+len(t8))/float(len(t4))
+        print("known_file predicted as unknown :", float(len(t7)+len(t8))/float(len(t4)))
+        know_pre_false = float(len(t6))/float(len(t4))
+        print("known_file predicted as false known :", float(len(t6))/float(len(t4)))
+        know_pre_true = float(len(t5))/float(len(t4))
+        print("known_file predicted as true known :", float(len(t5))/float(len(t4)))
 
 
 
 
 
+        return(result, acc_unknown_pre,know_pre_unknow,know_pre_false, know_pre_true )
