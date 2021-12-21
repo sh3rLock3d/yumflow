@@ -24,8 +24,8 @@ const DataTraining = () => {
       });
 
   const sendInfo = () => {
-    let name = document.getElementById("flow-models-select").value;
-    ActionTrainData(flow.id, { name })
+    const id = document.getElementById("flow-models-select").value;
+    ActionTrainData(flow.id, { id })
       .then((data) => data.json())
       .then((data) => {
         if (data.message) throw new Error(data.message);

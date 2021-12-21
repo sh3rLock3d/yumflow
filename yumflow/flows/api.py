@@ -152,7 +152,7 @@ class FlowViewSet(viewsets.ModelViewSet):
     def train_data(self, request, pk=None):
         flow = self.get_object()
         modelResult = None
-        id = request.get('id')
+        id = request.data.get('id')
         if id == None:
             content = {'message': 'داده های ورودی معتبر نیست'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)

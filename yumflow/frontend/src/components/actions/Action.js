@@ -60,7 +60,7 @@ function ActionTrainData(id, data) {
   return fetch(link, {
     method: "POST",
     headers: tokenConfig().headers,
-    body: JSON.stringify(data),
+    body: data,
   });
 }
 
