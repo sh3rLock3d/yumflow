@@ -39,12 +39,15 @@ const DataTesting = () => {
     );
 
     data.append(
-      "modelName",
+      "id",
       document.getElementById("test-flow-models-select").value.split("#")[0]
     );
 
     ActionTestData(flow.id, data)
-      .then((data) => data.json())
+      .then((data) => {
+        console.log(data);
+        return data.json();
+      })
       .then((data) => {
         if (data.message) throw new Error(data.message);
       })

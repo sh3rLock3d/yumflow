@@ -331,7 +331,10 @@ function DataPreparation() {
     let data = { constraints, cols, colFilter, name };
     console.log(data);
     ActionPrepareData(flow.id, data)
-      .then((data) => data.json())
+      .then((data) => {
+        console.log(data);
+        return data.json();
+      })
       .then((data) => {
         if (data.message) throw new Error(data.message);
       })
