@@ -7,6 +7,7 @@ import { FormGroup, Button, Select, MenuItem } from "@mui/material";
 const DataTraining = () => {
   const [state, dispatch] = useContext(Context);
   const flow = state["auth"]["flow"];
+  const [modelId, setModelId] = useState(undefined);
 
   const [error, setError] = useState(false);
 
@@ -24,8 +25,7 @@ const DataTraining = () => {
       });
 
   const sendInfo = () => {
-    const id = document.getElementById("flow-models-select").value;
-    ActionTrainData(flow.id, { id })
+    ActionTrainData(flow.id, { id: modelId })
       .then((data) => data.json())
       .then((data) => {
         if (data.message) throw new Error(data.message);
@@ -33,6 +33,16 @@ const DataTraining = () => {
       .catch((error) => {
         setError(error.message);
       });
+  };
+
+  const items = () => {
+    if (flowModels)
+      return flowModels.map((model) => (
+        <MenuItem key={model.id} value={model.id}>
+          {model.name || "without name"}
+        </MenuItem>
+      ));
+    else return <></>;
   };
 
   return (
@@ -44,13 +54,11 @@ const DataTraining = () => {
             variant="standard"
             id="flow-models-select"
             defaultValue=""
+            onChange={(_, eventData) => {
+              setModelId(eventData.props.value);
+            }}
           >
-            {flowModels &&
-              flowModels.map((model) => (
-                <MenuItem key={model.id} value={model.id}>
-                  {model.name || "without name"}
-                </MenuItem>
-              ))}
+            {items()}
           </Select>
         </div>
       </div>

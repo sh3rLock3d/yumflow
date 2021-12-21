@@ -153,6 +153,7 @@ class FlowViewSet(viewsets.ModelViewSet):
         flow = self.get_object()
         modelResult = None
         id = request.data.get('id')
+        print(request.data)
         if id == None:
             content = {'message': 'داده های ورودی معتبر نیست'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
