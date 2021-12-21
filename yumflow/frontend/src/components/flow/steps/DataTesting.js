@@ -23,29 +23,32 @@ const DataTesting = () => {
     ActionGetAllFlowModels(flow.id)
       .then((data) => data.json())
       .then((data) => {
-        console.log(data);
+        if (data.message) throw new Error(data.message);
         setFlowModels(data.models);
       })
-      .catch(() => {
-        console.log("AAAAAAAA");
+      .catch((err) => {
+        setError(err.message);
       });
 
   function testDataReq() {
     const data = new FormData();
+
     data.append(
       "testData",
-      document.getElementById("test-flow-models-select").value,
       document.getElementById("formFile_TestData").files[0]
+    );
+
+    data.append(
+      "modelName",
+      document.getElementById("test-flow-models-select").value.split("#")[0]
     );
 
     ActionTestData(flow.id, data)
       .then((data) => data.json())
       .then((data) => {
-        console.log(data);
         if (data.message) throw new Error(data.message);
       })
       .catch((error) => {
-        console.error("Error:", error);
         setError(error.message);
       });
   }
@@ -58,8 +61,10 @@ const DataTesting = () => {
             style={{ backgroundColor: "azure" }}
             disablePortal
             id="test-flow-models-select"
-            options={flowModels}
-            getOptionLabel={(option) => option.name}
+            options={flowModels || []}
+            getOptionLabel={(option) =>
+              `${option.id}#${option.name || "without name"}`
+            }
             sx={{ width: 300 }}
             renderInput={(params) => (
               <TextField {...params} variant="standard" fullWidth />

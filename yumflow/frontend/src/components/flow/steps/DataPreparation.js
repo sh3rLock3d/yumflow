@@ -333,11 +333,9 @@ function DataPreparation() {
     ActionPrepareData(flow.id, data)
       .then((data) => data.json())
       .then((data) => {
-        console.log(data);
         if (data.message) throw new Error(data.message);
       })
       .catch((error) => {
-        console.error("Error:", error);
         setError(error.message);
       });
   };

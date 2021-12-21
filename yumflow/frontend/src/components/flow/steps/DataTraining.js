@@ -16,11 +16,11 @@ const DataTraining = () => {
     ActionGetAllFlowModels(flow.id)
       .then((data) => data.json())
       .then((data) => {
-        console.log(data);
+        if (data.message) throw new Error(data.message);
         setFlowModels(data.models);
       })
-      .catch(() => {
-        console.log("AAAAAAAA");
+      .catch((err) => {
+        setError(err.message);
       });
 
   const sendInfo = () => {
@@ -28,11 +28,9 @@ const DataTraining = () => {
     ActionTrainData(flow.id, { name })
       .then((data) => data.json())
       .then((data) => {
-        console.log(data);
         if (data.message) throw new Error(data.message);
       })
       .catch((error) => {
-        console.error("Error:", error);
         setError(error.message);
       });
   };
@@ -45,11 +43,12 @@ const DataTraining = () => {
             style={{ width: 100 }}
             variant="standard"
             id="flow-models-select"
+            defaultValue=""
           >
             {flowModels &&
               flowModels.map((model) => (
                 <MenuItem key={model.id} value={model.id}>
-                  {model.name}
+                  {model.name || "without name"}
                 </MenuItem>
               ))}
           </Select>

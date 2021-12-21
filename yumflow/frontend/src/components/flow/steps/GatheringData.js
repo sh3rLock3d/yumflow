@@ -175,7 +175,6 @@ function ShowData({ id }) {
         });
       })
       .catch((error) => {
-        console.error("Error:", error);
         setError(error.message);
       });
   };
@@ -196,16 +195,16 @@ function ShowData({ id }) {
     <>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <Button onClick={showData} variant="contained" style={{ margin: 5 }}>
-          <i class="bi bi-arrow-repeat"></i>
+          <i className="bi bi-arrow-repeat"></i>
         </Button>
         <Button onClick={hideData} variant="contained" style={{ margin: 5 }}>
           مخفی کردن جدول
         </Button>
       </div>
-      <Table df={chart["data"]} />
+      <Table tableData={chart["data"]} />
 
       <Snackbar
-        open={error}
+        open={!!error}
         onClose={() => setError("")}
         message={error}
         variant="error"
