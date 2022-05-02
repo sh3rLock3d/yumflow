@@ -1,16 +1,20 @@
+import re
 from django.db.models import query
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from io import BytesIO
-
-from .createModel.main_insta import Create
-from .createModel.set_config import SetConfig
-
-
+import torch
+from torch import mode, ne, nn
+from torch.utils.data import TensorDataset, DataLoader
+from torchvision import datasets
+from torchvision.transforms import ToTensor
+from .enums import *
+from .network import *
 
 def read_CSV_data(csv_byte, labels):
-    df = pd.read_csv(BytesIO(csv_byte) , delimiter = "|")
+    df = pd.read_csv(BytesIO(csv_byte) ,)
+    print(type(labels))
     if (labels):
         now = pd.to_datetime("now")
         df['Time'] = [now for _ in range(len(df))]
@@ -20,6 +24,13 @@ def read_CSV_data(csv_byte, labels):
 def data_split(x, y, test_size):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=test_size)
     return x_train, x_test, y_train, y_test
+
+
+def get_data_x_and_y(df, label):
+    cols = list(df.columns)
+    print(len(cols))
+    cols.remove(label)
+    return df[cols].to_numpy(), df[[label]].to_numpy()
 
 
 def append_data(df1, df2):
@@ -83,6 +94,7 @@ def create_query(constraints):
     return query
 
 
+
 def filter_data(cols, colFilter, constraints, df):
     df = df
     # col
@@ -92,14 +104,26 @@ def filter_data(cols, colFilter, constraints, df):
         df = df[cols]
     if constraints:
         df = df.query(constraints)
-    file_name = 'flows/MLTools/createModel/train.csv'
-    df.to_csv(file_name, sep='|', encoding='utf-8')
-    a = SetConfig(True)
-    b = Create()
+    return df
 
-def test_data(df):
-    file_name = 'flows/MLTools/createModel/test.csv'
-    df.to_csv(file_name, sep='|', encoding='utf-8')
-    a = SetConfig(False)
-    b = Create()
-    return b
+
+
+def createNet(layer):
+    net = create_network(layer)
+    file_name = 'flows/MLTools/model.pth'
+    torch.save(net.state_dict(), file_name)
+    return net
+
+def loadModel(path, layer):   
+    model = create_network(layer)
+    model.load_state_dict(torch.load(path))
+    return model
+
+def train_network(train_info, net, x_train, y_train):
+    model, result = train_the_network(train_info, net, x_train, y_train)
+    file_name = 'flows/MLTools/model.pth'
+    torch.save(model.state_dict(), file_name)
+    return model, result
+
+def test_model(info, model, x_test, y_test):
+    return test_network(info, model, x_test, y_test)

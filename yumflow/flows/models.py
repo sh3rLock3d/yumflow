@@ -24,6 +24,7 @@ class DataFrame(models.Model):
 class ModelResult(models.Model):
     name = models.CharField(max_length=100, unique=True)
     preparation = models.ForeignKey('PrepareData', blank=True ,null=True, on_delete=models.CASCADE,related_name='train_query',)
+    hyperparameters = PickledObjectField(blank=True ,null=True)
     modelOfTrain = models.ForeignKey('ModelOfTrain', blank=True ,null=True, on_delete=models.CASCADE,related_name='modelOfTrain',)
     testResult = models.ForeignKey('TestResult', blank=True ,null=True, on_delete=models.CASCADE,related_name='testResult',)
     owner = models.ForeignKey(User, related_name="modelResult", on_delete=models.CASCADE, null=True)

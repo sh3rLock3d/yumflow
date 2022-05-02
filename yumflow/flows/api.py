@@ -44,10 +44,10 @@ class FlowViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def set_data(self, request, pk=None):
         flow = self.get_object()
-
         data =  request.FILES.get("trainData")
+        addTimeCol = True if (request.data["addTimeCol"] == 'true') else False
         try:
-            data = read_CSV_data(data.read(), request.data["addTimeCol"])
+            data = read_CSV_data(data.read(), addTimeCol)
         except:
             content = {'message': 'داده های ورودی معتبر نیست'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
@@ -97,19 +97,48 @@ class FlowViewSet(viewsets.ModelViewSet):
         datas = show_digest_of_data(flow.data.data)
         return Response(datas)
 
-    
+    # train
+    @action(detail=True, methods=['post'])
+    @parser_classes([JSONParser])
+    def create_model(self, request, pk=None):
+        flow = self.get_object()
+        name = request.data.get('name')
+        try:
+            modelOfResult = ModelResult(name=name,)
+        except:
+            content = {'message': 'نام تکراری است'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+        preparation =  PrepareData(cols = [], colFilter = 0, constraints= [])
+        preparation.save()
+        modelOfResult.preparation = preparation
+        modelOfResult.save()
+
+        flow.modelResult.add(modelOfResult)
+        flow.save()
+
+        return Response({'status': 'done'})
+
     @action(detail=True, methods=['post'])
     @parser_classes([JSONParser])
     def prepare_data(self, request, pk=None):
         flow = self.get_object()
-        # df = filter_data(request.data['cols'], request.data['colFilter'], request.data['constraints'], flow.data.data)
-        
-        name = request.data.get('name')
-
-        if request.data['name'] == None:
-            content = {'message': 'برای مدل جدید داده ای انتخاب نشده است.'}
+        modelResult = None
+        id = request.data.get('id')
+        print(request.data)
+        if id == None:
+            content = {'message': 'داده های ورودی معتبر نیست'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
-        
+
+        for mor in flow.modelResult.all():
+            if mor.id == id:
+                modelResult = mor
+                break
+
+        if modelResult == None:
+            content = {'message': 'چنین شناسه ای وجود ندارد'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
         try:
             preparation =  PrepareData(cols = request.data['cols'], colFilter = request.data['colFilter'], constraints= create_query(request.data['constraints']))
         except:
@@ -117,18 +146,8 @@ class FlowViewSet(viewsets.ModelViewSet):
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
         preparation.save()
-        
-        try:
-            modelOfResult = ModelResult(name=name, preparation=preparation)
-        except:
-            content = {'message': 'نام تکراری است'}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)
-
-        modelOfResult.save()
-
-        flow.modelResult.add(modelOfResult)
-        flow.save()
-
+        modelResult.preparation = preparation
+        modelResult.save()
         return Response({'status': 'done'})
 
     @action(detail=True, methods=['get'])
@@ -149,11 +168,47 @@ class FlowViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     @parser_classes([JSONParser])
-    def train_data(self, request, pk=None):
+    def set_model_hyperparameters(self, request, pk=None):
         flow = self.get_object()
         modelResult = None
         id = request.data.get('id')
         print(request.data)
+        if id == None:
+            content = {'message': 'داده های ورودی معتبر نیست'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+        for mor in flow.modelResult.all():
+            if mor.id == id:
+                modelResult = mor
+                break
+
+        if modelResult == None:
+            content = {'message': 'چنین شناسه ای وجود ندارد'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        
+        
+        layer = request.data.get('layer')
+        try:
+            net = createNet(layer,)
+        except:
+            content = {'message': 'با داده های داده شده توانایی ساخت شبکه وجود ندارد'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+        modelResult.hyperparameters = layer
+        with File(open('flows/MLTools/model.pth', mode='rb'), name='model.pth') as f:
+            m = ModelOfTrain(upload=f)
+            m.save()
+            modelResult.modelOfTrain = m
+            modelResult.save()
+            flow.save()
+        return Response({'status': 'done'})
+
+    @action(detail=True, methods=['post'])
+    @parser_classes([JSONParser])
+    def train_data(self, request, pk=None):
+        flow = self.get_object()
+        modelResult = None
+        id = request.data.get('id')
         if id == None:
             content = {'message': 'داده های ورودی معتبر نیست'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
@@ -175,19 +230,29 @@ class FlowViewSet(viewsets.ModelViewSet):
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            filter_data(preparation.cols, preparation.colFilter, preparation.constraints, flow.data.data)
+            df = filter_data(preparation.cols, preparation.colFilter, preparation.constraints, flow.data.data)
         except:
             content = {'message': 'داده های ورودی معتبر نیست'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         
-        with File(open('flows/MLTools/createModel/final_test/insta_trained_model.txt', mode='rb'), name='insta_trained_model.txt') as f:
+        train_info = request.data.get('train_info')
+        
+        m = modelResult.modelOfTrain.upload
+        
+        layer = modelResult.hyperparameters
+        
+        net = loadModel(m.path, layer)
+
+        x_train, y_train = get_data_x_and_y(df, train_info['label_y'])
+        model, result = train_network(train_info, net, x_train, y_train)
+
+        with File(open('flows/MLTools/model.pth', mode='rb'), name='model.pth') as f:
             m = ModelOfTrain(upload=f)
             m.save()
             modelResult.modelOfTrain = m
             modelResult.save()
             flow.save()
-        
-        return Response({'status': 'done'})
+        return Response({'result': result})
         
     @action(detail=True, methods=['post'])
     @parser_classes([JSONParser])
@@ -211,10 +276,36 @@ class FlowViewSet(viewsets.ModelViewSet):
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
         m = modelResult.modelOfTrain.upload
-        os.popen(f'cp {m.path} flows/MLTools/createModel/final_test/insta_trained_model.txt')
-        data =  request.FILES.get("testData")
-        data = read_CSV_data(data.read(), False)        
-        res = test_data(data)
+        net = loadModel(m.path)
+        info = request.data.get('test_info')
+        # todo replace with test data
+        preparation = modelResult.preparation
+
+        if preparation == None:
+            content = {'message': 'ابتدا داده ها را وارد کنید'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            df = filter_data(preparation.cols, preparation.colFilter, preparation.constraints, flow.data.data)
+        except:
+            content = {'message': 'داده های ورودی معتبر نیست'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        
+        train_info = request.data.get('train_info')
+        
+        m = modelResult.modelOfTrain.upload
+        net = loadModel(m.path)
+
+        x_train, y_train = get_data_x_and_y(df, train_info['label'])
+        ############################
+        
+        try:
+            res = test_model(info,net,x_train,y_train)
+        except:
+            content = {'message': 'مشکلی درپارامتر های ورودی موجود است.'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+
         return Response({'result': res})
 
     
