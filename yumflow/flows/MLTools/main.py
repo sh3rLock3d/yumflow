@@ -28,7 +28,6 @@ def data_split(x, y, test_size):
 
 def get_data_x_and_y(df, label):
     cols = list(df.columns)
-    print(len(cols))
     cols.remove(label)
     return df[cols].to_numpy(), df[[label]].to_numpy()
 
@@ -96,14 +95,19 @@ def create_query(constraints):
 
 
 def filter_data(cols, colFilter, constraints, df):
+    
     df = df
+    
     # col
     if colFilter == 1:
         df = df.loc[:, ~df.columns.isin(cols)]
     elif colFilter == 2:
         df = df[cols]
-    if constraints:
+
+
+    if constraints != "[]":
         df = df.query(constraints)
+
     return df
 
 

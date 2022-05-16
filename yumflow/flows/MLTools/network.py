@@ -79,14 +79,14 @@ def train_the_network(info, model, x_train, y_train):
     loss_fn = get_lossFn(info['lossfn'])
     optimizer = get_optimizer(info['optimizer'], info['learning_rate'], model.parameters())
     batch_size = info['batch_size']
-
     result = []
 
     tensor_x = torch.Tensor(x_train.copy())  # transform to torch tensor
+
     tensor_y = torch.Tensor(y_train.copy())
     training_dataset = TensorDataset(tensor_x, tensor_y)  # create your datset
     train_dataloader = DataLoader(training_dataset, batch_size=batch_size)  # create your dataloader
-    print('training')
+    
     epochs = info['epochs']
     for t in range(epochs):
         result.append(f"Epoch {t + 1}\n-------------------------------")
@@ -97,6 +97,8 @@ def train_the_network(info, model, x_train, y_train):
             X, y = X.to(device), y.to(torch.long).to(device)
             # Compute prediction error
             pred = model(X)
+
+            y = y.reshape(pred.shape[0])
             loss = loss_fn(pred, y)
 
             # Backpropagation
@@ -127,6 +129,7 @@ def test_network(info, model, x_test, y_test):
         for X, y in dataloader:
             X, y = X.to(device), y.to(torch.long).to(device)
             pred = model(X)
+            y = y.reshape(pred.shape[0])
             test_loss += loss_fn(pred, y).item()
             correct += (pred.argmax(1) == y).type(torch.float).sum().item()
     test_loss /= num_batches

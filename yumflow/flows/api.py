@@ -244,6 +244,7 @@ class FlowViewSet(viewsets.ModelViewSet):
         net = loadModel(m.path, layer)
 
         x_train, y_train = get_data_x_and_y(df, train_info['label_y'])
+
         model, result = train_network(train_info, net, x_train, y_train)
 
         with File(open('flows/MLTools/model.pth', mode='rb'), name='model.pth') as f:
@@ -276,7 +277,8 @@ class FlowViewSet(viewsets.ModelViewSet):
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
         m = modelResult.modelOfTrain.upload
-        net = loadModel(m.path)
+        layer = modelResult.hyperparameters
+        net = loadModel(m.path, layer)
         info = request.data.get('test_info')
         # todo replace with test data
         preparation = modelResult.preparation
@@ -291,13 +293,9 @@ class FlowViewSet(viewsets.ModelViewSet):
             content = {'message': 'داده های ورودی معتبر نیست'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         
-        train_info = request.data.get('train_info')
         
-        m = modelResult.modelOfTrain.upload
-        net = loadModel(m.path)
-
-        x_train, y_train = get_data_x_and_y(df, train_info['label'])
-        ############################
+        x_train, y_train = get_data_x_and_y(df, info['label_y'])
+        ############################ todo
         
         try:
             res = test_model(info,net,x_train,y_train)
@@ -307,6 +305,12 @@ class FlowViewSet(viewsets.ModelViewSet):
 
 
         return Response({'result': res})
+
+
+    @action(detail=True, methods=['post'])
+    @parser_classes([JSONParser])
+    def predict_data(self, request, pk=None):
+        return Response({'result': "not implemented yet"})
 
     
 
