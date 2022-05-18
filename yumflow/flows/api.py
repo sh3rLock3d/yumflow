@@ -347,17 +347,17 @@ class FlowViewSet(viewsets.ModelViewSet):
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            df = filter_data(preparation.cols, preparation.colFilter, preparation.constraints, flow.data.data)
+            _, df = prepare_train_and_test_by_prepration(preparation.cols, preparation.colFilter, preparation.constraints,preparation.nans, preparation.categories, preparation.normalize, preparation.sliceStr ,flow.data.data, flow.dataTest.data)
         except:
             content = {'message': 'داده های ورودی معتبر نیست'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         
         
-        x_train, y_train = get_data_x_and_y(df, info['label_y'])
+        x_test, y_test = get_data_x_and_y(df, info['label_y'])
         ############################ todo
         
         try:
-            res = test_model(info,net,x_train,y_train)
+            res = test_model(info,net,x_test,y_test)
         except:
             content = {'message': 'مشکلی درپارامتر های ورودی موجود است.'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
