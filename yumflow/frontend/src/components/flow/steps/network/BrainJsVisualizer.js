@@ -33,6 +33,7 @@ function BrainJsVisualizer(net, htmlParentNode){
 		if(typeof(this._htmlParentNode) == 'object'){
 			this._htmlParentNode.appendChild(this._canvas);
 			this._context = this._canvas.getContext('2d');
+			
 			return true;
 		}
 		
@@ -107,15 +108,15 @@ function BrainJsVisualizer(net, htmlParentNode){
 	
 	
 	this.render = function(){
-		console.log(this._net);
-		console.log(this._net.weights);
+		//console.log(this._net);
+		//console.log(this._net.weights);
 		
 		if(this._canvas == null || this._context == null){
 			this._createCanvas();
 		}
 		
-		console.log(this._canvas);
-		console.log(this._context);
+		//console.log(this._canvas);
+		//console.log(this._context);
 		
 		
 		//We draw arrows first

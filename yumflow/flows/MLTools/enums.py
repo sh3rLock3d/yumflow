@@ -18,6 +18,7 @@ class Loss_fn(Enum):
     MEAN_ABSOLUTE_ERROR = 'mean_absolute_error'
     MEAN_SQUARE_ERROR = 'mean_square_error'
     NEGATIVE_LIKELIHOOD = 'negative_likelihood'
+    BINARY_CROSS_ENTROPY = 'binary_cross_entropy'
 
 class Optimizer(Enum):
     SGD = 'SGD'

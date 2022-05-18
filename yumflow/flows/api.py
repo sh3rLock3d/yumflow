@@ -246,12 +246,13 @@ class FlowViewSet(viewsets.ModelViewSet):
         
         
         layer = request.data.get('layer')
+        
         try:
             net = createNet(layer,)
         except:
             content = {'message': 'با داده های داده شده توانایی ساخت شبکه وجود ندارد'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
-
+        
         modelResult.hyperparameters = layer
         with File(open('flows/MLTools/model.pth', mode='rb'), name='model.pth') as f:
             m = ModelOfTrain(upload=f)
@@ -288,7 +289,7 @@ class FlowViewSet(viewsets.ModelViewSet):
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            df = filter_data(preparation.cols, preparation.colFilter, preparation.constraints, flow.data.data)
+            df, _ = prepare_train_and_test_by_prepration(preparation.cols, preparation.colFilter, preparation.constraints,preparation.nans, preparation.categories, preparation.normalize, preparation.sliceStr ,flow.data.data, flow.dataTest.data)
         except:
             content = {'message': 'داده های ورودی معتبر نیست'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)

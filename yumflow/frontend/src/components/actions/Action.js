@@ -90,6 +90,17 @@ function ActionGetTrainAndTestInfo(id, data) {
   });
 }
 
+function ActionSetModelHyperParameters(id, data) {
+  const link = `${URL}flows/${id}/set_model_hyperparameters/`;
+
+  return fetch(link, {
+    method: "POST",
+    headers: tokenConfig().headers,
+    body: JSON.stringify(data),
+  });
+}
+
+
 function ActionTrainData(id, data) {
   const link = `${URL}flows/${id}/train_data/`;
 
@@ -132,4 +143,5 @@ export {
   ActionGetAllFlowModels,
   ActionGetAllModels,
   ActionCreateNewModel,
+  ActionSetModelHyperParameters,
 };

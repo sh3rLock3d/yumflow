@@ -61,13 +61,15 @@ def get_lossFn(info): # todo move this func to body of enum
         return nn.L1Loss()
     elif info == Loss_fn.NEGATIVE_LIKELIHOOD.value:
         return nn.NLLLoss()
+    elif info == Loss_fn.BINARY_CROSS_ENTROPY.value:
+        return nn.BCELoss()
     else:
         raise Exception(f'loss function ${info} is not available')
 
 
 def get_optimizer(opt, l, param):
     if opt == Optimizer.SGD.value:
-        return torch.optim.SGD(param, lr=l)
+        return torch.optim.SGD(param, lr=l, momentum=0.9)
     elif opt == Optimizer.ADAM.value:
         a = torch.optim.Adam(param, lr=l)
         return a
@@ -89,12 +91,10 @@ def train_the_network(info, model, x_train, y_train):
     
     epochs = info['epochs']
     for t in range(epochs):
-        result.append(f"Epoch {t + 1}\n-------------------------------")
-
         size = len(train_dataloader.dataset)
         model.train()
         for batch, (X, y) in enumerate(train_dataloader):
-            X, y = X.to(device), y.to(torch.long).to(device)
+            X, y = X.to(device), y.to(torch.float).to(device)
             # Compute prediction error
             pred = model(X)
 
@@ -106,9 +106,8 @@ def train_the_network(info, model, x_train, y_train):
             loss.backward()
             optimizer.step()
 
-            if batch % 4 == 0: # todo
-                loss, current = loss.item(), batch * len(X)
-                result.append(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
+        else:
+            result.append(loss)
     return model, result
 
 
