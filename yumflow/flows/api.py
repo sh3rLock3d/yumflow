@@ -61,6 +61,25 @@ class FlowViewSet(viewsets.ModelViewSet):
         return Response(FlowSerializers(flow).data)
     
     @action(detail=True, methods=['post'])
+    def set_data_test(self, request, pk=None):
+        flow = self.get_object()
+        data =  request.FILES.get("testData")
+        addTimeCol = True if (request.data["addTimeCol"] == 'true') else False
+        try:
+            data = read_CSV_data(data.read(), addTimeCol)
+        except:
+            content = {'message': 'داده های ورودی معتبر نیست'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        
+        df1 = DataFrame(data=data)
+        df1.save()
+        if flow.dataTest != None:
+            flow.dataTest.delete()
+        flow.dataTest = df1
+        flow.save()
+        return Response(FlowSerializers(flow).data)
+
+    @action(detail=True, methods=['post'])
     def append_data(self, request, pk=None):
         flow = self.get_object()
         data =  request.FILES.get("trainData")    
@@ -109,7 +128,7 @@ class FlowViewSet(viewsets.ModelViewSet):
             content = {'message': 'نام تکراری است'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
-        preparation =  PrepareData(cols = [], colFilter = 0, constraints= [])
+        preparation =  PrepareData(cols = [], colFilter = 0, constraints= [], nans=[], normalize =[],categories=[], sliceStr = [])
         preparation.save()
         modelOfResult.preparation = preparation
         modelOfResult.save()
@@ -124,7 +143,7 @@ class FlowViewSet(viewsets.ModelViewSet):
     def prepare_data(self, request, pk=None):
         flow = self.get_object()
         modelResult = None
-        id = request.data.get('id')
+        id = request.data.get('name')
         print(request.data)
         if id == None:
             content = {'message': 'داده های ورودی معتبر نیست'}
@@ -140,7 +159,7 @@ class FlowViewSet(viewsets.ModelViewSet):
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            preparation =  PrepareData(cols = request.data['cols'], colFilter = request.data['colFilter'], constraints= create_query(request.data['constraints']))
+            preparation =  PrepareData(cols = request.data['cols'], colFilter = request.data['colFilter'], constraints= create_query(request.data['constraints']), nans=request.data["nan"], normalize =request.data["normalize"],categories=request.data["category"], sliceStr = request.data['sliceStr'])
         except:
             content = {'message': 'داده های ورودی معتبر نیست'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)

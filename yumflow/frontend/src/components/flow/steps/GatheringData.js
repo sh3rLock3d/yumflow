@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import {
   ActionSetData,
+  ActionSetDataTest,
   ActionGetGatheringDataInfo,
   ActionAppendData,
 } from "../../actions/Action";
@@ -79,6 +80,78 @@ function InsertData({ id }) {
 
   return form;
 }
+
+function InsertDataTest({ id }) {
+  const [state, dispatch] = useContext(Context);
+  const flow = state["auth"]["flow"];
+
+  const [error, setError] = useState("");
+
+  function InsertDataTestReq() {
+    const data = new FormData();
+    data.append(
+      "testData",
+      document.getElementById("insert-data-test-file-input").files[0]
+    );
+    data.append(
+      "addTimeCol",
+      document.getElementById("formTimeCol_TestData").checked
+    );
+
+    ActionSetDataTest(id, data)
+      .then((data) => data.json())
+      .then((data) => {
+        console.log(data);
+        if (data.message) throw new Error(data.message);
+        dispatch({ type: SET_FLOW, payload: data });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        setError(error.message);
+      });
+  }
+
+  const form = (
+    <form>
+      <FormGroup style={{ alignItems: "center" }}>
+        <input accept=".csv" hidden id="insert-data-test-file-input" type="file" />
+        <label>لطفا فایل داده‌های خود را به صورت csv آپلود کنید</label>
+        <label htmlFor="insert-data-test-file-input">
+          <Button variant="contained" component="span">
+            آپلود
+          </Button>
+        </label>
+
+        <FormControlLabel
+          control={<Checkbox color="secondary" id="formTimeCol_TestData" />}
+          label="اضافه کردن ستون زمان به داده‌ها"
+        />
+
+        <br />
+
+        <Button
+          variant="contained"
+          color="success"
+          style={{ width: "100%", maxWidth: "300px" }}
+          onClick={InsertDataTestReq}
+        >
+          ارسال
+        </Button>
+      </FormGroup>
+
+      <Snackbar
+        open={!!error}
+        onClose={() => setError("")}
+        message={error}
+        variant="error"
+      />
+    </form>
+  );
+
+  return form;
+}
+
+
 
 function AppendData({ id }) {
   const [state, dispatch] = useContext(Context);
@@ -221,11 +294,15 @@ function GatheringData() {
 
   return (
     <div className="container p-2">
+      <h3>داده آموزش</h3>
       <InsertData id={flow.id} />
       <hr />
       <AppendData id={flow.id} />
       <hr />
       <ShowData id={flow.id} />
+      <hr />
+      <h3>داده تست</h3>
+      <InsertDataTest id={flow.id} />
     </div>
   );
 }

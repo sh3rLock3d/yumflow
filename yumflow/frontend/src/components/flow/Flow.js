@@ -9,6 +9,7 @@ import GatheringData from "./steps/GatheringData";
 import DataPreparation from "./steps/DataPreparation";
 import DataTraining from "./steps/DataTraining";
 import DataTesting from "./steps/DataTesting";
+import CreateModel from "./steps/CreateModel"
 
 const Flow = () => {
   const { id } = useParams();
@@ -95,7 +96,7 @@ const Flow = () => {
               aria-expanded="false"
               aria-controls="collapseThree"
             >
-              ۳. آموزش داده‌ها
+              ۳. ساخت مدل
             </button>
           </h1>
 
@@ -105,9 +106,12 @@ const Flow = () => {
             aria-labelledby="headingThree"
             data-bs-parent="#accordion"
           >
-            <DataTraining />
+            <CreateModel/>
           </div>
         </div>
+
+
+
 
         <div className="accordion-item">
           <h1 className="accordion-header" id="headingFour">
@@ -119,7 +123,7 @@ const Flow = () => {
               aria-expanded="false"
               aria-controls="collapseFour"
             >
-              ۴. تست داده‌ها
+              ۴. آموزش داده‌ها
             </button>
           </h1>
 
@@ -127,6 +131,30 @@ const Flow = () => {
             id="collapseFour"
             className="accordion-collapse collapse"
             aria-labelledby="headingFour"
+            data-bs-parent="#accordion"
+          >
+            <DataTraining />
+          </div>
+        </div>
+
+        <div className="accordion-item">
+          <h1 className="accordion-header" id="headingFive">
+            <button
+              className="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseFive"
+              aria-expanded="false"
+              aria-controls="collapseFive"
+            >
+              ۵. تست داده‌ها
+            </button>
+          </h1>
+
+          <div
+            id="collapseFive"
+            className="accordion-collapse collapse"
+            aria-labelledby="headingFive"
             data-bs-parent="#accordion"
           >
             <DataTesting />

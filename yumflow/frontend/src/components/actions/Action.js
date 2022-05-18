@@ -30,6 +30,15 @@ function ActionSetData(id, data) {
   });
 }
 
+function ActionSetDataTest(id, data) {
+  const setTestAndTrainDataURL = `${URL}flows/${id}/set_data_test/`;
+  return fetch(setTestAndTrainDataURL, {
+    method: "POST",
+    headers: tokenConfigForm().headers,
+    body: data,
+  });
+}
+
 function ActionAppendData(id, data) {
   const setTestAndTrainDataURL = `${URL}flows/${id}/append_data/`;
   return fetch(setTestAndTrainDataURL, {
@@ -53,6 +62,23 @@ function ActionPrepareData(id, data) {
     body: JSON.stringify(data),
   });
 }
+
+function ActionGetAllModels(id, data) {
+  const link = `${URL}flows/${id}/get_all_flow_models/`;
+
+  return fetch(link, tokenConfig());
+}
+
+function ActionCreateNewModel(id, data) {
+  const link = `${URL}flows/${id}/create_model/`;
+
+  return fetch(link, {
+    method: "POST",
+    headers: tokenConfig().headers,
+    body: JSON.stringify(data),
+  });
+}
+
 
 function ActionTrainData(id, data) {
   const link = `${URL}flows/${id}/train_data/`;
@@ -85,6 +111,7 @@ export {
   ActionGetAllFlows,
   ActionCreateFlow,
   ActionSetData,
+  ActionSetDataTest,
   ActionGetGatheringDataInfo,
   ActionGetFlow,
   ActionAppendData,
@@ -92,4 +119,6 @@ export {
   ActionTrainData,
   ActionTestData,
   ActionGetAllFlowModels,
+  ActionGetAllModels,
+  ActionCreateNewModel,
 };

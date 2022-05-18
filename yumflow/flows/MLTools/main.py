@@ -38,6 +38,7 @@ def append_data(df1, df2):
 
 def show_digest_of_data(x):
     shape = x.shape
+    x = x.fillna('')
     header = list(x.columns)
     if len(header) >= 10:
         header = header[:5] + ['...'] + header[-5:]

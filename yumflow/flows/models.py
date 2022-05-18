@@ -9,6 +9,7 @@ class Flow(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, related_name="flows", on_delete=models.CASCADE, null=True)
     data = models.ForeignKey('DataFrame', blank=True ,null=True, on_delete=models.CASCADE,related_name='train',)
+    dataTest = models.ForeignKey('DataFrame', blank=True ,null=True, on_delete=models.CASCADE,related_name='test',)
     modelResult = models.ManyToManyField('ModelResult', blank=True)
 
 
@@ -32,6 +33,10 @@ class ModelResult(models.Model):
 
 class PrepareData(models.Model):
     cols = PickledObjectField()
+    nans = PickledObjectField()
+    categories = PickledObjectField()
+    normalize = PickledObjectField()
+    sliceStr=PickledObjectField()
     colFilter = models.IntegerField(blank=True, null=True)
     constraints = models.CharField(max_length=100,)
     owner = models.ForeignKey(User, related_name="prepareData", on_delete=models.CASCADE, null=True)

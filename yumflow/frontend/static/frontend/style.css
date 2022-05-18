@@ -3,13 +3,7 @@
   margin: 0;
 }
 
-body {
-  height: 100vh;
-  background-image: url("https://www.datamation.com/wp-content/uploads/2021/10/DRL-ICA-91521-scaled.jpeg");
-  background-repeat: repeat-y;
-  background-size: cover;
-  background-position-y: 142px;
-}
+
 
 li {
   text-align: center;
@@ -46,7 +40,7 @@ input {
 
 .my-card {
   align-items: center;
-  background-color: cyan;
+  background-color: #92B4EC;
 }
 
 .my-form-group {
@@ -68,15 +62,15 @@ input {
 }
 
 .accordion-item {
-  background-color: cyan;
+  background-color: #FFE69A;
   border-radius: 16px !important;
   border: none;
   margin: 5px 0;
 }
 
 .accordion-button {
-  background-color: teal !important;
-  color: azure !important;
+  background-color: #FFD24C !important;
+  color: black !important;
   border-radius: 16px !important;
   justify-content: space-between;
 }

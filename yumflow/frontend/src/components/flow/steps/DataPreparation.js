@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../../../Store";
-import { ActionPrepareData } from "../../actions/Action";
+import { ActionPrepareData, ActionGetAllModels, ActionCreateNewModel } from "../../actions/Action";
 import Snackbar from "../../common/MySnackbar";
 import {
   FormGroup,
@@ -12,6 +12,76 @@ import {
   MenuItem,
 } from "@mui/material";
 import TextField from "../../common/MyTextField";
+
+const CreateModel = () => {
+  const [state, dispatch] = useContext(Context);
+  const flow = state["auth"]["flow"];
+
+  const [error, setError] = useState("");
+
+
+  const create_new_model = () => {
+    let name = document.getElementById("new_model_name").value;
+    let data = { name };
+    ActionCreateNewModel(flow.id, data)
+      .then((data) => {
+        return data.json();
+      })
+      .then((data) => {
+        if (data.message) throw new Error(data.message);
+        console.log(data)
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+  }
+
+  const getAllModels = () => {
+    ActionGetAllModels(flow.id)
+      .then((data) => {
+        return data.json();
+      })
+      .then((data) => {
+        if (data.message) throw new Error(data.message);
+        console.log(data)
+        const options = data.models.map((model) => `<option key=${model.id} value=${model.id}>${model.name}</option>`)
+        const sell = document.getElementById("modelSelector")
+
+        sell.innerHTML = options.join('')
+
+
+
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+  }
+
+
+  return (
+    <>
+      <div className="container p-2 text-center">
+        <h5>انتخاب مدل</h5>
+        <TextField id="new_model_name" label="مدل جدید" />
+        <Button style={{ margin: 5 }} variant="contained" color="primary" onClick={create_new_model}>
+          ساخت مدل جدید
+        </Button>
+
+        <div className="row m-4">
+          <select className="form-select" aria-label="Default select example" id="modelSelector">
+          </select>
+        </div>
+
+        <Button style={{ margin: 5 }} variant="contained" color="primary" onClick={getAllModels}>
+          گرفتن مدل ها
+        </Button>
+
+
+      </div>
+    </>
+  )
+}
+
 
 const ChooseRows = ({ Pconstraints }) => {
   const [state, dispatch] = useContext(Context);
@@ -308,6 +378,224 @@ const ChooseCols = ({ Pcols }) => {
   );
 };
 
+
+const FillNan = ({PNan}) => {
+  const [state, dispatch] = useContext(Context);
+  const flow = state["auth"]["flow"];
+
+  const [inputCols, setInputCols] = useState({});
+
+  PNan.length = 0;
+  PNan.push(inputCols);
+
+  const inputColDiv = Object.keys(inputCols).map((name) =>
+    <input
+      className="form-control"
+      id={name}
+      name={name}
+      type="text"
+      value={inputCols[name]}
+      placeholder="نام ستون"
+    />
+  );
+
+
+  const addCol = () => {
+    let v = document.getElementById("fillNan0").value
+    let k = `fillNan${Object.keys(inputCols).length + 1}`;
+    document.getElementById("fillNan0").value = ""
+    setInputCols({
+      ...inputCols,
+      [k]: v,
+    });
+  };
+
+  return (
+    <div className="container p-2 text-center">
+      <h5>پر کردن سطر های خالی زیر با میانگین</h5>
+      <div className="row justify-center">
+        <div className="col-3" id="fillNan_inputs">
+          {inputColDiv}
+
+          <input
+            className="form-control"
+            id="fillNan0"
+            name="fillNan0"
+            type="text"
+            placeholder="نام ستون"
+          />
+        </div>
+      </div>
+
+      <Button variant="contained" className="btn btn-info" onClick={addCol}> اضافه کردن ستون </Button>
+    </div>
+  );
+
+}
+
+
+const SetCategory = ({Pcategries}) => {
+  const [state, dispatch] = useContext(Context);
+  const flow = state["auth"]["flow"];
+
+  const [inputCols, setInputCols] = useState({});
+  
+  Pcategries.length = 0;
+  Pcategries.push(inputCols);
+  
+  const inputColDiv = Object.keys(inputCols).map((name) =>
+    <input
+      className="form-control"
+      id={name}
+      name={name}
+      type="text"
+      value={inputCols[name]}
+      placeholder="نام ستون"
+    />
+  );
+
+
+  const addCol = () => {
+    let v = document.getElementById("CategoryCol0").value
+    let k = `CategoryCol${Object.keys(inputCols).length + 1}`;
+    document.getElementById("CategoryCol0").value = ""
+    setInputCols({
+      ...inputCols,
+      [k]: v,
+    });
+  };
+
+  return (
+    <div className="container p-2 text-center">
+      <h5>سطر های کتگوری</h5>
+      <div className="row justify-center">
+        <div className="col-3" id="CategoryCol_inputs">
+          {inputColDiv}
+
+          <input
+            className="form-control"
+            id="CategoryCol0"
+            name="CategoryCol0"
+            type="text"
+            placeholder="نام ستون"
+          />
+        </div>
+      </div>
+
+      <Button variant="contained" className="btn btn-info" onClick={addCol}> اضافه کردن ستون </Button>
+    </div>
+  )
+}
+
+
+const Normalize = ({Pnormalized}) => {
+  const [state, dispatch] = useContext(Context);
+  const flow = state["auth"]["flow"];
+
+  const [inputCols, setInputCols] = useState({});
+  
+  Pnormalized.length = 0;
+  Pnormalized.push(inputCols);
+  
+  const inputColDiv = Object.keys(inputCols).map((name) =>
+    <input
+      className="form-control"
+      id={name}
+      name={name}
+      type="text"
+      value={inputCols[name]}
+      placeholder="نام ستون"
+    />
+  );
+
+
+  const addCol = () => {
+    let v = document.getElementById("NormalizeCols0").value
+    let k = `NormalizeCols${Object.keys(inputCols).length + 1}`;
+    document.getElementById("NormalizeCols0").value = ""
+    setInputCols({
+      ...inputCols,
+      [k]: v,
+    });
+  };
+
+  return (
+    <div className="container p-2 text-center">
+      <h5>سطر های نرمالایز</h5>
+      <div className="row justify-center">
+        <div className="col-3" id="CategoryCol_inputs">
+          {inputColDiv}
+
+          <input
+            className="form-control"
+            id="NormalizeCols0"
+            name="NormalizeCols0"
+            type="text"
+            placeholder="نام ستون"
+          />
+        </div>
+      </div>
+
+      <Button variant="contained" className="btn btn-info" onClick={addCol}> اضافه کردن ستون </Button>
+    </div>
+  )
+}
+
+
+const SliceStr = ({PSliceStr}) => {
+  const [state, dispatch] = useContext(Context);
+  const flow = state["auth"]["flow"];
+
+  const [inputCols, setInputCols] = useState({});
+  
+  PSliceStr.length = 0;
+  PSliceStr.push(inputCols);
+  
+  const inputColDiv = Object.keys(inputCols).map((name) =>
+    <input
+      className="form-control"
+      id={name}
+      name={name}
+      type="text"
+      value={inputCols[name]}
+      placeholder="نام ستون"
+    />
+  );
+
+
+  const addCol = () => {
+    let v = document.getElementById("SliceStrCols0").value
+    let k = `SliceStrCols${Object.keys(inputCols).length + 1}`;
+    document.getElementById("SliceStrCols0").value = ""
+    setInputCols({
+      ...inputCols,
+      [k]: v,
+    });
+  };
+
+  return (
+    <div className="container p-2 text-center">
+      <h5>گرفتن حرف اول سطر ستون ها</h5>
+      <div className="row justify-center">
+        <div className="col-3" id="CategoryCol_inputs">
+          {inputColDiv}
+
+          <input
+            className="form-control"
+            id="SliceStrCols0"
+            name="SliceStrCols0"
+            type="text"
+            placeholder="نام ستون"
+          />
+        </div>
+      </div>
+
+      <Button variant="contained" className="btn btn-info" onClick={addCol}> اضافه کردن ستون </Button>
+    </div>
+  )
+}
+
+
 function DataPreparation() {
   const [state, dispatch] = useContext(Context);
   const flow = state["auth"]["flow"];
@@ -318,6 +606,10 @@ function DataPreparation() {
 
   const Pconstraints = [];
   const Pcols = [];
+  const Pcategries = [];
+  const Pnormalized = [];
+  const PNan = [];
+  const PSliceStr = [];
   const sendInfo = () => {
     let constraints = Pconstraints;
     let cols = Object.values(Pcols[0]);
@@ -327,8 +619,14 @@ function DataPreparation() {
     } else if (document.getElementById("radioChooseCol3").checked) {
       colFilter = 2;
     }
-    let name = document.getElementById("constraints-name").value;
-    let data = { constraints, cols, colFilter, name };
+    let normalize = Object.values(Pnormalized[0]);
+    let nan = Object.values(PNan[0]);
+    let category = Object.values(Pcategries[0]);
+    let sliceStr = Object.values(PSliceStr[0]);
+    var select = document.getElementById("modelSelector")
+    let name = Number(select.options[select.selectedIndex].value)
+    
+    let data = { constraints, cols, colFilter, name, normalize, nan, category, sliceStr};
     console.log(data);
     ActionPrepareData(flow.id, data)
       .then((data) => {
@@ -344,36 +642,58 @@ function DataPreparation() {
   };
 
   return (
-    <form className="container p-2">
-      <FormGroup style={{ alignItems: "center" }}>
-        <TextField id="constraints-name" label="نام مدل" />
-      </FormGroup>
+    <>
+      <CreateModel />
       <hr />
-      <FormGroup style={{ alignItems: "center" }}>
-        <ChooseCols Pcols={Pcols} />
-      </FormGroup>
-      <hr />
-      <FormGroup style={{ alignItems: "center" }}>
-        <ChooseRows Pconstraints={Pconstraints} />
-      </FormGroup>
-      <FormGroup style={{ alignItems: "center" }}>
-        <Button
-          variant="contained"
-          color="success"
-          style={{ width: "100%", maxWidth: "300px" }}
-          onClick={sendInfo}
-        >
-          ارسال اطلاعات
-        </Button>
-      </FormGroup>
 
-      <Snackbar
-        open={!!error}
-        onClose={() => setError("")}
-        message={error}
-        variant="error"
-      />
-    </form>
+      <form className="container p-2">
+
+        <FormGroup style={{ alignItems: "center" }}>
+          <ChooseCols Pcols={Pcols} />
+        </FormGroup>
+        <hr />
+        <FormGroup style={{ alignItems: "center" }}>
+          <ChooseRows Pconstraints={Pconstraints} />
+        </FormGroup>
+
+        <FormGroup style={{ alignItems: "center" }}>
+          <FillNan PNan={PNan}/>
+        </FormGroup>
+
+        <FormGroup style={{ alignItems: "center" }}>
+          <SliceStr PSliceStr={PSliceStr}/>
+        </FormGroup>
+
+        <FormGroup style={{ alignItems: "center" }}>
+          <SetCategory Pcategries={Pcategries} />
+        </FormGroup>
+
+        <FormGroup style={{ alignItems: "center" }}>
+          <Normalize Pnormalized={Pnormalized} />
+        </FormGroup>
+
+
+
+        <FormGroup style={{ alignItems: "center" }}>
+          <Button
+            variant="contained"
+            color="success"
+            style={{ width: "100%", maxWidth: "300px" }}
+            onClick={sendInfo}
+          >
+            ارسال اطلاعات
+          </Button>
+        </FormGroup>
+
+        <Snackbar
+          open={!!error}
+          onClose={() => setError("")}
+          message={error}
+          variant="error"
+        />
+      </form>
+    </>
+
   );
 }
 
