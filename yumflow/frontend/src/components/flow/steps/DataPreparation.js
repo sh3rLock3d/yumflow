@@ -394,7 +394,7 @@ const FillNan = ({PNan}) => {
       id={name}
       name={name}
       type="text"
-      value={inputCols[name]}
+      defaultValue={inputCols[name]}
       placeholder="نام ستون"
     />
   );

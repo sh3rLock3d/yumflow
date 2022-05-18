@@ -36,7 +36,7 @@ class PrepareData(models.Model):
     nans = PickledObjectField()
     categories = PickledObjectField()
     normalize = PickledObjectField()
-    sliceStr=PickledObjectField()
+    sliceStr = PickledObjectField()
     colFilter = models.IntegerField(blank=True, null=True)
     constraints = models.CharField(max_length=100,)
     owner = models.ForeignKey(User, related_name="prepareData", on_delete=models.CASCADE, null=True)

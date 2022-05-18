@@ -80,6 +80,16 @@ function ActionCreateNewModel(id, data) {
 }
 
 
+function ActionGetTrainAndTestInfo(id, data) {
+  const link = `${URL}flows/${id}/get_train_and_test_info/`;
+
+  return fetch(link, {
+    method: "POST",
+    headers: tokenConfig().headers,
+    body: JSON.stringify(data),
+  });
+}
+
 function ActionTrainData(id, data) {
   const link = `${URL}flows/${id}/train_data/`;
 
@@ -116,6 +126,7 @@ export {
   ActionGetFlow,
   ActionAppendData,
   ActionPrepareData,
+  ActionGetTrainAndTestInfo,
   ActionTrainData,
   ActionTestData,
   ActionGetAllFlowModels,

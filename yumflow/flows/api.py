@@ -128,7 +128,7 @@ class FlowViewSet(viewsets.ModelViewSet):
             content = {'message': 'نام تکراری است'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
-        preparation =  PrepareData(cols = [], colFilter = 0, constraints= [], nans=[], normalize =[],categories=[], sliceStr = [])
+        preparation =  PrepareData(cols = [], colFilter = 0, constraints= '[]', nans=[], normalize =[],categories=[], sliceStr = [])
         preparation.save()
         modelOfResult.preparation = preparation
         modelOfResult.save()
@@ -157,7 +157,7 @@ class FlowViewSet(viewsets.ModelViewSet):
         if modelResult == None:
             content = {'message': 'چنین شناسه ای وجود ندارد'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
-
+ 
         try:
             preparation =  PrepareData(cols = request.data['cols'], colFilter = request.data['colFilter'], constraints= create_query(request.data['constraints']), nans=request.data["nan"], normalize =request.data["normalize"],categories=request.data["category"], sliceStr = request.data['sliceStr'])
         except:
@@ -184,6 +184,45 @@ class FlowViewSet(viewsets.ModelViewSet):
                 "score": mor.testResult.score if  mor.testResult else -1,
             })
         return Response({'models': res})
+
+    @action(detail=True, methods=['post'])
+    @parser_classes([JSONParser])
+    def get_train_and_test_info(self, request, pk=None):
+        flow = self.get_object()
+        modelResult = None
+        id = request.data.get('modelId')
+        if id == None:
+            content = {'message': 'داده های ورودی معتبر نیست'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+        for mor in flow.modelResult.all():
+            if mor.id == id:
+                modelResult = mor
+                break
+        
+        if modelResult == None:
+            content = {'message': 'چنین شناسه ای وجود ندارد'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+
+        preparation = modelResult.preparation
+
+        if preparation == None:
+            content = {'message': 'ابتدا داده ها را وارد کنید'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+    
+
+        try:
+            train, test = prepare_train_and_test_by_prepration(preparation.cols, preparation.colFilter, preparation.constraints,preparation.nans, preparation.categories, preparation.normalize, preparation.sliceStr ,flow.data.data, flow.dataTest.data)
+        except Exception as e:
+            content = {'message': str(e)}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)        
+        train, test = get_data_info(train), get_data_info(test)
+        return Response({'train':train, 'test':test})
+
+
+
+
 
     @action(detail=True, methods=['post'])
     @parser_classes([JSONParser])
