@@ -52,4 +52,6 @@ class ModelOfTrain(models.Model):
 
 class TestResult(models.Model):
     owner = models.ForeignKey(User, related_name="testResult", on_delete=models.CASCADE, null=True)
-    score = models.FloatField(default=-1.0)
+    loss_fn = models.CharField(max_length=100)
+    accuracy = models.FloatField(blank=True, null=True)
+    avgLoss = models.FloatField(blank=True, null=True)

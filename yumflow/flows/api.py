@@ -1,4 +1,4 @@
-from flows.models import Flow, DataFrame, ModelResult, PrepareData, ModelOfTrain
+from flows.models import Flow, DataFrame, ModelResult, PrepareData, ModelOfTrain, TestResult
 from rest_framework import viewsets, permissions
 from .serializers import DataFrameSerializers, FlowSerializers
 from rest_framework.decorators import action
@@ -351,16 +351,35 @@ class FlowViewSet(viewsets.ModelViewSet):
         
         x_test, y_test = get_data_x_and_y(df, info['label_y'])
         
-        Accuracy, Avg_loss = test_model(info,net,x_test,y_test)
-        '''
+        
+        
         try:
-            res = test_model(info,net,x_test,y_test)
+            Accuracy, Avg_loss = test_model(info,net,x_test,y_test)
         except:
             content = {'message': 'مشکلی درپارامتر های ورودی موجود است.'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
-        '''
-
+        
+        testResult = TestResult(loss_fn=info['lossfn'], accuracy=Accuracy,avgLoss=Avg_loss)
+        testResult.save()
+        modelResult.testResult = testResult
+        modelResult.save()
         return Response({"Accuracy":Accuracy, "Avg_loss":Avg_loss})
+
+    @action(detail=True, methods=['get'])
+    @parser_classes([JSONParser])
+    def compare_all_flow_models(self, request, pk=None):
+        flow = self.get_object()
+        res = []
+        for mor in flow.modelResult.all():
+            res.append({
+                "name":mor.name,
+                "id":mor.id,
+                "testResult_id": mor.testResult.id if mor.testResult else None,
+                'loss_fn': mor.testResult.loss_fn if mor.testResult else None,
+                'accuracy': mor.testResult.accuracy if mor.testResult else None,
+                'avgLoss': mor.testResult.avgLoss if mor.testResult else None,
+            })
+        return Response({'models': res})
 
 
     @action(detail=True, methods=['post'])

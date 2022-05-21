@@ -10,6 +10,8 @@ import DataPreparation from "./steps/DataPreparation";
 import DataTraining from "./steps/DataTraining";
 import DataTesting from "./steps/DataTesting";
 import CreateModel from "./steps/CreateModel"
+import CompareModel from "./steps/CompareModel"
+
 
 const Flow = () => {
   const { id } = useParams();
@@ -160,6 +162,32 @@ const Flow = () => {
             <DataTesting />
           </div>
         </div>
+      
+        <div className="accordion-item">
+          <h1 className="accordion-header" id="headingSix">
+            <button
+              className="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseSix"
+              aria-expanded="false"
+              aria-controls="collapseSix"
+            >
+              ۶. مقایسه ی مدل ها
+            </button>
+          </h1>
+
+          <div
+            id="collapseSix"
+            className="accordion-collapse collapse"
+            aria-labelledby="headingSix"
+            data-bs-parent="#accordion"
+          >
+            <CompareModel />
+          </div>
+        </div>
+
+      
       </div>
 
       <Snackbar

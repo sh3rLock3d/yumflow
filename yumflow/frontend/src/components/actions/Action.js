@@ -120,6 +120,12 @@ function ActionTestData(id, data) {
   });
 }
 
+function ActionCompareAllModels(id, data) {
+  const link = `${URL}flows/${id}/compare_all_flow_models/`;
+  return fetch(link, tokenConfig());
+}
+
+
 function ActionGetAllFlowModels(id) {
   const url = `${URL}flows/${id}/get_all_flow_models/`;
   return fetch(url, {
@@ -144,4 +150,5 @@ export {
   ActionGetAllModels,
   ActionCreateNewModel,
   ActionSetModelHyperParameters,
+  ActionCompareAllModels,
 };
