@@ -53,7 +53,7 @@ function Header() {
   );
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-primary" id="header">
       <a className="navbar-brand me-3 ms-5" href="#">
         یادگیری چرخه ی ماشین
       </a>

@@ -1,7 +1,7 @@
 
 
 
-
+//https://github.com/drumrock/BrainJsVisualizer
 function BrainJsVisualizer(net, htmlParentNode){
 	this._net = net;
 	this._inputLayer = this._net.inputLookup;
