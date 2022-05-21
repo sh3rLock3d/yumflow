@@ -112,11 +112,11 @@ function ActionTrainData(id, data) {
 }
 
 function ActionTestData(id, data) {
-  const setTestAndTrainDataURL = `${URL}flows/${id}/test_data/`;
-  return fetch(setTestAndTrainDataURL, {
+  const link = `${URL}flows/${id}/test_data/`;
+  return fetch(link, {
     method: "POST",
-    headers: tokenConfigForm().headers,
-    body: data,
+    headers: tokenConfig().headers,
+    body: JSON.stringify(data),
   });
 }
 

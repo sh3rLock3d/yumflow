@@ -220,10 +220,6 @@ class FlowViewSet(viewsets.ModelViewSet):
         train, test = get_data_info(train), get_data_info(test)
         return Response({'train':train, 'test':test})
 
-
-
-
-
     @action(detail=True, methods=['post'])
     @parser_classes([JSONParser])
     def set_model_hyperparameters(self, request, pk=None):
@@ -304,7 +300,7 @@ class FlowViewSet(viewsets.ModelViewSet):
 
         x_train, y_train = get_data_x_and_y(df, train_info['label_y'])
 
-        model, result = train_network(train_info, net, x_train, y_train)
+        model, result, trainingLoss = train_network(train_info, net, x_train, y_train)
 
         with File(open('flows/MLTools/model.pth', mode='rb'), name='model.pth') as f:
             m = ModelOfTrain(upload=f)
@@ -312,15 +308,15 @@ class FlowViewSet(viewsets.ModelViewSet):
             modelResult.modelOfTrain = m
             modelResult.save()
             flow.save()
-        return Response({'result': result})
+        return Response({'result': result, "trainingLoss":trainingLoss})
         
     @action(detail=True, methods=['post'])
     @parser_classes([JSONParser])
     def test_data(self, request, pk=None):
         flow = self.get_object()
-
         modelResult = None
         id = request.data.get('id')
+
         id = int(id)
         if id == None:
             content = {'message': 'داده های ورودی معتبر نیست'}
@@ -339,7 +335,7 @@ class FlowViewSet(viewsets.ModelViewSet):
         layer = modelResult.hyperparameters
         net = loadModel(m.path, layer)
         info = request.data.get('test_info')
-        # todo replace with test data
+        
         preparation = modelResult.preparation
 
         if preparation == None:
@@ -354,16 +350,17 @@ class FlowViewSet(viewsets.ModelViewSet):
         
         
         x_test, y_test = get_data_x_and_y(df, info['label_y'])
-        ############################ todo
         
+        Accuracy, Avg_loss = test_model(info,net,x_test,y_test)
+        '''
         try:
             res = test_model(info,net,x_test,y_test)
         except:
             content = {'message': 'مشکلی درپارامتر های ورودی موجود است.'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        '''
 
-
-        return Response({'result': res})
+        return Response({"Accuracy":Accuracy, "Avg_loss":Avg_loss})
 
 
     @action(detail=True, methods=['post'])

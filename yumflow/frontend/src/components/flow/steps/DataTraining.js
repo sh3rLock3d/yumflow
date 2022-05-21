@@ -75,7 +75,10 @@ const DataTraining = () => {
       .then((data) => {
         if (data.message) throw new Error(data.message);
         console.log(data)
-        Addchart(data['result'])
+        Addchart(data['result'])        
+        debugger
+        document.getElementById('trainingLoss').innerHTML = 'traing loss:' + data['trainingLoss']
+
       })
       .catch((error) => {
         setError(error.message);
@@ -128,6 +131,7 @@ const DataTraining = () => {
       </div>
       <Button style={{ margin: 5 }} variant="contained" color="primary" onClick={sendInfo}>آغاز تست</Button>
       <canvas id="myChart"></canvas>
+      <p id="trainingLoss"></p>
 
     </>
   );

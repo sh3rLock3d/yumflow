@@ -91,6 +91,7 @@ def train_the_network(info, model, x_train, y_train):
     
     epochs = info['epochs']
     for t in range(epochs):
+        running_loss = 0
         size = len(train_dataloader.dataset)
         model.train()
         for batch, (X, y) in enumerate(train_dataloader):
@@ -105,10 +106,12 @@ def train_the_network(info, model, x_train, y_train):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+            running_loss += loss.item()
 
         else:
             result.append(loss)
-    return model, result
+    trainingLoss = running_loss / len(train_dataloader)
+    return model, result, trainingLoss
 
 
 def test_network(info, model, x_test, y_test):
@@ -126,14 +129,17 @@ def test_network(info, model, x_test, y_test):
     test_loss, correct = 0, 0
     with torch.no_grad():
         for X, y in dataloader:
-            X, y = X.to(device), y.to(torch.long).to(device)
+            X, y = X.to(device), y.to(torch.float).to(device)
             pred = model(X)
             y = y.reshape(pred.shape[0])
             test_loss += loss_fn(pred, y).item()
             correct += (pred.argmax(1) == y).type(torch.float).sum().item()
     test_loss /= num_batches
     correct /= size
-    return f"Test Error: \n Accuracy: {(100 * correct):>0.1f}%, Avg loss: {test_loss:>8f} \n"
+    Accuracy = float(f"{(100 * correct):>0.1f}")
+    Avg_loss = float(f"{test_loss:>8f}")
+    #return f"Test Error: \n Accuracy: {(100 * correct):>0.1f}%, Avg loss: {test_loss:>8f} \n"
+    return Accuracy, Avg_loss
 
 
 def predict_by_network(model, x, y, classes):

@@ -191,10 +191,10 @@ def loadModel(path, layer):
     return model
 
 def train_network(train_info, net, x_train, y_train):
-    model, result = train_the_network(train_info, net, x_train, y_train)
+    model, result, trainingLoss = train_the_network(train_info, net, x_train, y_train)
     file_name = 'flows/MLTools/model.pth'
     torch.save(model.state_dict(), file_name)
-    return model, result
+    return model, result, trainingLoss
 
 def test_model(info, model, x_test, y_test):
     return test_network(info, model, x_test, y_test)

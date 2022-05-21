@@ -40,7 +40,7 @@ const DataTesting = () => {
     
     let test_info = { lossfn, batch_size, label_y }
 
-    let data = { id, train_info };
+    let data = { id, test_info };
     console.log(data);
     ActionTestData(flow.id, data)
       .then((data) => {
@@ -49,6 +49,7 @@ const DataTesting = () => {
       .then((data) => {
         if (data.message) throw new Error(data.message);
         console.log(data)
+        document.getElementById("testResult").innerHTML = "Test Error: Accuracy: "+data['Accuracy']+"%, Avg loss: " + data['Avg_loss']
         
       })
       .catch((error) => {
@@ -93,6 +94,7 @@ const DataTesting = () => {
         </div>
       </div>
       <Button style={{ margin: 5 }} variant="contained" color="primary" onClick={sendInfo}>آغاز تست</Button>
+      <p id="testResult"></p>
 
     </>
   );
